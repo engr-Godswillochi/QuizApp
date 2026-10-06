@@ -16,7 +16,7 @@ Students preparing for a multiple-choice computer-based examination in COS 438 A
 
 ## Product Purpose
 
-Turn the supplied course PDF into a focused practice environment. Each attempt randomly selects 50 questions from a bank of 200, lets the student answer at their own pace, and provides a clear score and review at the end.
+Turn the supplied course PDFs into a focused practice environment. Each attempt randomly selects 50 questions from a bank of 300, lets the student answer at their own pace, and provides a clear score and review at the end.
 
 ## Positioning
 
@@ -28,12 +28,12 @@ The app is used for independent exam practice on desktop or mobile. Attempts are
 
 ## Capabilities and Constraints
 
-- Maintain a bank of exactly 200 multiple-choice questions.
+- Maintain a bank of exactly 300 multiple-choice questions.
 - Randomly select 50 distinct questions for every new attempt.
 - Use four answer options per question with one correct answer.
 - Provide navigation, progress, completion, scoring, and answer review.
 - Give launch, quiz, submission, results, answer review, and revision their own browser URLs.
-- Provide a searchable revision bank containing all 200 questions, correct answers, and explanations.
+- Provide a searchable revision bank containing all 300 questions, correct answers, and explanations.
 - Mix core recall with scenario, comparison, application, calculation, and inference questions.
 - No backend, accounts, remote database, or server-side state.
 - Keep the production bundle small and compatible with static Vercel deployment.

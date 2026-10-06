@@ -209,13 +209,13 @@ Spacing follows a compact 4px-derived rhythm, with 8–16px used inside controls
 - **`/submit`:** The explicit answered/open-record checkpoint before scoring.
 - **`/results`:** The submitted score, topic ledger, and onward actions.
 - **`/review`:** The submitted attempt replay with correct, incorrect, and explanation states exposed.
-- **`/revision`:** The independent, searchable 200-question bank with topic filtering and answer disclosure.
+- **`/revision`:** The independent, searchable 300-question bank with topic filtering and answer disclosure.
 
 An active attempt persists for the browser tab session: its randomized question IDs, selected answers, and submitted status survive reloads and route changes without implying an account or cross-device history. Results and review are gated by submitted state; when an in-progress attempt tries to open either route, the interface replaces it with `/quiz`. Starting a fresh attempt from a protected result state also replaces that stale history entry so Back does not reopen obsolete results.
 
 ### Revision Layout
 
-The revision surface places a 70px translucent navigation bar above a large introduction and live result count. A second sticky tool row sits directly below it with a flexible search field, narrower topic selector, and answer-visibility toggle. Each record is a flat two-column ledger row—72px number rail plus content—with two-column answer choices and an optional green explanation panel. Off-screen records use content visibility containment so the full 200-question page stays light to scroll.
+The revision surface places a 70px translucent navigation bar above a large introduction and live result count. A second sticky tool row sits directly below it with a flexible search field, narrower topic selector, and answer-visibility toggle. Each record is a flat two-column ledger row—72px number rail plus content—with two-column answer choices and an optional green explanation panel. Off-screen records use content visibility containment so the full 300-question page stays light to scroll.
 
 At 680px, the revision header compresses to 62px and hides the centered wordmark, the introduction and count stack, and the tool row becomes a two-column grid with search spanning both columns. Record number and content stack into one column; answer options and the revealed explanation also become single-column reading flows.
 
@@ -281,7 +281,7 @@ Attempt answer rows behave as large radio fields rather than generic form inputs
 - **Focus:** The hidden radio transfers a visible 3px focus outline to the option marker.
 - **Review:** Correct uses green border, surface, marker, and check; the chosen incorrect answer uses the equivalent red treatment.
 - **Revision Search:** A 46px-high search field with an 11px radius, Deep Panel fill, Signal Line border, and contextual placeholder; focus changes the border to cyan and adds a low cyan ring.
-- **Topic Select:** Matches the search field exactly and filters to one of the eight course areas or all topics.
+- **Topic Select:** Matches the search field exactly and filters to one of the twelve course areas or all topics.
 - **Answer Toggle:** A 46px-high outlined control with cyan text and `aria-pressed`; it changes between “Show answers” and “Hide answers” for the complete filtered list.
 
 ### Chips

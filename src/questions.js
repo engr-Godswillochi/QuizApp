@@ -1,3 +1,5 @@
+import { agentQuestions } from './agentQuestions.js'
+
 const sections = [
   {
     topic: 'Propositional logic',
@@ -339,13 +341,13 @@ const challengeQuestions = [
   explanation,
 }))
 
-export const questionBank = [...coreQuestions, ...challengeQuestions]
+export const questionBank = [...coreQuestions, ...challengeQuestions, ...agentQuestions]
 
-export const topics = sections.map(({ topic }) => ({
+export const topics = [...new Set(questionBank.map(({ topic }) => topic))].map((topic) => ({
   topic,
   count: questionBank.filter((question) => question.topic === topic).length,
 }))
 
-if (questionBank.length !== 200) {
-  throw new Error(`Expected 200 questions, received ${questionBank.length}.`)
+if (questionBank.length !== 300) {
+  throw new Error(`Expected 300 questions, received ${questionBank.length}.`)
 }

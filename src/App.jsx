@@ -38,8 +38,8 @@ function StartScreen({ onStart, onRevision }) {
         <div className="lab-brand"><span className="lab-mark">Q</span><strong>Prep50</strong></div>
         <div className="rail-course"><span>COS 438</span><strong>AI II</strong></div>
         <div className="rail-stats" aria-label="Course bank details">
-          <div><span>Questions</span><strong>200</strong></div>
-          <div><span>Topics</span><strong>08</strong></div>
+          <div><span>Questions</span><strong>{questionBank.length}</strong></div>
+          <div><span>Topics</span><strong>{String(topics.length).padStart(2, '0')}</strong></div>
           <div><span>Attempt</span><strong>50</strong></div>
         </div>
         <span className="rail-note">Source-aligned practice</span>
@@ -54,7 +54,7 @@ function StartScreen({ onStart, onRevision }) {
         <div className="lab-hero">
           <div className="lab-copy">
             <h1>Train the<br />connections.</h1>
-            <p>Practice directly from your course material. Each attempt builds a fresh path through logic, machine learning, NLP, theorem proving, and probabilistic reasoning.</p>
+            <p>Practice directly from your course material. Each attempt builds a fresh path through logic, intelligent agents, machine learning, NLP, theorem proving, and probabilistic reasoning.</p>
             <div className="lab-facts">
               <div><strong>50</strong><span>random questions</span></div>
               <div><strong>∞</strong><span>time to think</span></div>
@@ -226,7 +226,7 @@ function RevisionScreen({ onHome, onStart }) {
         <section className="revision-intro">
           <div>
             <h1>Know the whole bank.</h1>
-            <p>Search all 200 questions, inspect the correct answers, and revise one course area at a time.</p>
+            <p>Search all {questionBank.length} questions, inspect the correct answers, and revise one course area at a time.</p>
           </div>
           <div className="revision-count"><strong>{visibleQuestions.length}</strong><span>questions shown</span></div>
         </section>
