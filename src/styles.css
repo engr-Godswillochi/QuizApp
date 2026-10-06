@@ -55,11 +55,18 @@ button:disabled { opacity: .35; cursor: not-allowed; }
 .lab-copy h1 { margin: 0; font-size: clamp(3.6rem, 7vw, 7rem); line-height: .88; letter-spacing: -.04em; }
 .lab-copy h1::after { content: ''; display: block; width: 88px; height: 5px; margin-top: 28px; background: var(--pink); box-shadow: 0 0 18px rgba(255,93,175,.4); }
 .lab-copy > p { max-width: 57ch; margin: 26px 0 0; color: var(--muted); font-size: .94rem; line-height: 1.75; }
-.lab-facts { margin: 32px 0; display: flex; }
+.lab-facts { margin: 32px 0 22px; display: flex; }
 .lab-facts div { min-width: 142px; display: grid; gap: 3px; padding: 4px 24px 4px 0; }
 .lab-facts div + div { padding-left: 24px; border-left: 1px solid var(--line); }
 .lab-facts strong { color: var(--cyan); font-size: 1.7rem; font-variant-numeric: tabular-nums; }
 .lab-facts span { color: var(--muted); font-size: .63rem; }
+.attempt-picker { width: min(360px, 100%); margin: 0 0 28px; padding: 0; border: 0; }
+.attempt-picker legend { margin-bottom: 9px; color: var(--muted); font-size: .63rem; }
+.attempt-picker > div { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 5px; border: 1px solid var(--line); border-radius: 13px; background: #09112b; }
+.attempt-picker button { min-height: 38px; border: 0; border-radius: 9px; color: #9eadd0; background: transparent; font-size: .72rem; font-weight: 800; font-variant-numeric: tabular-nums; cursor: pointer; transition: color .16s ease, background-color .16s ease, box-shadow .16s ease; }
+.attempt-picker button:hover { color: #eef3ff; background: #152044; }
+.attempt-picker button.selected { color: #061020; background: var(--cyan); box-shadow: 0 7px 20px rgba(53,214,255,.2); }
+.attempt-picker button:focus-visible { outline: 3px solid color-mix(in srgb, var(--focus) 55%, transparent); outline-offset: 2px; }
 .launch-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .text-link { min-height: 44px; padding: 0 4px; display: inline-flex; align-items: center; gap: 8px; border: 0; color: #d7e1fa; background: transparent; font-weight: 720; font-size: .76rem; cursor: pointer; text-decoration: underline; text-decoration-color: #465982; text-underline-offset: 5px; }
 .text-link:hover { color: var(--cyan); text-decoration-color: var(--cyan); }
@@ -223,8 +230,10 @@ button:disabled { opacity: .35; cursor: not-allowed; }
   .lab-copy h1 { font-size: clamp(3.05rem, 15vw, 4.4rem); }
   .lab-copy h1::after { width: 64px; height: 4px; margin-top: 20px; }
   .lab-copy > p { margin-top: 20px; font-size: .86rem; line-height: 1.66; }
-  .lab-facts { margin: 24px 0; }
+  .lab-facts { margin: 24px 0 18px; }
   .lab-facts div { min-width: 0; width: 50%; }
+  .attempt-picker { width: 100%; margin-bottom: 22px; }
+  .attempt-picker button { min-height: 42px; }
   .lab-copy .primary-button { width: 100%; }
   .launch-actions { display: grid; gap: 8px; }
   .launch-actions .text-link { justify-content: center; }

@@ -124,6 +124,14 @@
       "css": ".ds-btn-secondary { min-height: 52px; border: 0; border-radius: 12px; padding: 0 22px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; color: #eaf0ff; background: var(--panel-2, #111c40); font: 780 0.85rem/1.5 'Manrope Variable', sans-serif; cursor: pointer; box-shadow: inset 0 0 0 1px var(--line, #27355e); transition: background-color .16s ease, transform .16s ease; } .ds-btn-secondary:hover { background: #172650; } .ds-btn-secondary:focus-visible { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 3px; } .ds-btn-secondary:active { transform: translateY(1px); } .ds-btn-secondary svg { flex: 0 0 auto; }"
     },
     {
+      "name": "Attempt Size Selector",
+      "kind": "input",
+      "refersTo": "attempt-picker",
+      "description": "A compact single-choice control for 10, 20, 30, or 50 questions per attempt.",
+      "html": "<fieldset class=\"ds-attempt-picker\"><legend>Questions per attempt</legend><div><button>10</button><button>20</button><button>30</button><button class=\"selected\" aria-pressed=\"true\">50</button></div></fieldset>",
+      "css": ".ds-attempt-picker { width: min(360px, 100%); margin: 0; padding: 0; border: 0; color: #eef2ff; font-family: 'Manrope Variable', sans-serif; } .ds-attempt-picker legend { margin-bottom: 9px; color: var(--muted, #9aa9ca); font-size: .63rem; } .ds-attempt-picker > div { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 5px; border: 1px solid var(--line, #27355e); border-radius: 13px; background: #09112b; } .ds-attempt-picker button { min-height: 38px; border: 0; border-radius: 9px; color: #9eadd0; background: transparent; font: 800 .72rem/1 'Manrope Variable', sans-serif; font-variant-numeric: tabular-nums; cursor: pointer; } .ds-attempt-picker button:hover { color: #eef3ff; background: #152044; } .ds-attempt-picker button.selected { color: #061020; background: var(--cyan, #35d6ff); box-shadow: 0 7px 20px rgba(53,214,255,.2); } .ds-attempt-picker button:focus-visible { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 2px; }"
+    },
+    {
       "name": "Answer Option",
       "kind": "input",
       "refersTo": "answer-option",
@@ -158,7 +166,7 @@
       "name": "Neural Coverage Signal",
       "kind": "custom",
       "description": "The compact translucent readout embedded in the signature network stage.",
-      "html": "<div class=\"ds-signal-card\"><span>Course coverage</span><strong>8 connected areas</strong><i><b></b></i></div>",
+      "html": "<div class=\"ds-signal-card\"><span>Course coverage</span><strong>12 connected areas</strong><i><b></b></i></div>",
       "css": ".ds-signal-card { width: min(420px, calc(100% - 32px)); padding: 17px 18px; display: grid; grid-template-columns: 1fr auto; gap: 5px 18px; border: 1px solid #354775; border-radius: 13px; color: #f5f7ff; background: rgba(8,14,37,.88); backdrop-filter: blur(10px); font-family: 'Manrope Variable', sans-serif; } .ds-signal-card span { color: var(--muted, #9aa9ca); font-size: .6rem; } .ds-signal-card strong { font-size: .76rem; } .ds-signal-card i { grid-column: 1 / -1; height: 3px; background: #26345d; overflow: hidden; } .ds-signal-card b { display: block; width: 76%; height: 100%; background: linear-gradient(90deg, var(--cyan, #35d6ff), var(--violet, #8466ff), var(--pink, #ff5daf)); transition: width .16s ease; } .ds-signal-card:hover b { width: 82%; } .ds-signal-card:focus-within { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 3px; }"
     },
     {

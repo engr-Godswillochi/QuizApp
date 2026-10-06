@@ -196,16 +196,16 @@ The palette behaves like instrumentation on a dark bench: neutral surfaces disap
 
 ## Layout
 
-The launch screen uses a compact 178px course rail beside a flexible main stage. Its hero is capped at 1160px and balances a slightly narrower copy column against the neural network. The quiz uses a 1120px container with a flexible reading column and a 250px sticky question index; reading surfaces keep their own internal rhythm rather than inheriting dashboard density. The revision bank also uses a 1120px container, but replaces the quiz split with a full-width, filterable reading ledger.
+The launch screen uses a compact 178px course rail beside a flexible main stage. Its hero is capped at 1160px and balances a slightly narrower copy column against the neural network. A compact four-option control lets the student choose 10, 20, 30, or 50 questions; its cyan selected state updates the rail, attempt fact, and primary action copy immediately. The quiz uses a 1120px container with a flexible reading column and a 250px sticky question index; reading surfaces keep their own internal rhythm rather than inheriting dashboard density. The revision bank also uses a 1120px container, but replaces the quiz split with a full-width, filterable reading ledger.
 
-At 900px, the rail compresses to 112px, the hero becomes an even two-column split, and the question index moves into normal flow with ten columns. At 680px, the rail becomes a 66px course bar, the hero stacks copy before network, the quiz index returns to five columns inside a bounded 228px scroll region, and submission remains in document flow. Touch actions become full-width where the content sequence benefits from an unambiguous next step.
+At 900px, the rail compresses to 112px, the hero becomes an even two-column split, and the question index moves into normal flow with ten columns. At 680px, the rail becomes a 66px course bar, the hero stacks copy before network, the attempt-size control spans the copy width with 42px touch targets, the quiz index returns to five columns inside a bounded 228px scroll region, and submission remains in document flow. Touch actions become full-width where the content sequence benefits from an unambiguous next step.
 
 Spacing follows a compact 4px-derived rhythm, with 8–16px used inside controls, 24–32px between local groups, and 48–64px for major regions. Containers preserve at least 12px of mobile edge clearance and 20–24px on wider quiz views.
 
 ### Routed Experience
 
 - **`/`:** Launch, product orientation, and entry points for a new attempt or the complete revision bank.
-- **`/quiz`:** The active 50-question attempt with question navigation and progress state.
+- **`/quiz`:** The active 10-, 20-, 30-, or 50-question attempt with question navigation and progress state.
 - **`/submit`:** The explicit answered/open-record checkpoint before scoring.
 - **`/results`:** The submitted score, topic ledger, and onward actions.
 - **`/review`:** The submitted attempt replay with correct, incorrect, and explanation states exposed.

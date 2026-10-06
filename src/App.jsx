@@ -1,8 +1,7 @@
 import { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import { ATTEMPT_SIZES, DEFAULT_ATTEMPT_SIZE, isAttemptSize } from './attempt.js'
 import { canOpenRoute, isProtectedResultRoute } from './navigation.js'
 import { questionBank, topics } from './questions.js'
-
-const EXAM_SIZE = 50
 
 const Icon = ({ name, size = 18 }) => {
   const paths = {
@@ -22,16 +21,16 @@ const secureRandom = (max) => {
   return bucket[0] % max
 }
 
-const makeAttempt = () => {
+const makeAttempt = (size) => {
   const pool = [...questionBank]
   for (let index = pool.length - 1; index > 0; index -= 1) {
     const swapIndex = secureRandom(index + 1)
     ;[pool[index], pool[swapIndex]] = [pool[swapIndex], pool[index]]
   }
-  return pool.slice(0, EXAM_SIZE)
+  return pool.slice(0, size)
 }
 
-function StartScreen({ onStart, onRevision }) {
+function StartScreen({ attemptSize, onSizeChange, onStart, onRevision }) {
   return (
     <main className="neural-shell">
       <aside className="lab-rail">
@@ -40,7 +39,7 @@ function StartScreen({ onStart, onRevision }) {
         <div className="rail-stats" aria-label="Course bank details">
           <div><span>Questions</span><strong>{questionBank.length}</strong></div>
           <div><span>Topics</span><strong>{String(topics.length).padStart(2, '0')}</strong></div>
-          <div><span>Attempt</span><strong>50</strong></div>
+          <div><span>Attempt</span><strong>{attemptSize}</strong></div>
         </div>
         <span className="rail-note">Source-aligned practice</span>
       </aside>
@@ -56,11 +55,21 @@ function StartScreen({ onStart, onRevision }) {
             <h1>Train the<br />connections.</h1>
             <p>Practice directly from your course material. Each attempt builds a fresh path through logic, intelligent agents, machine learning, NLP, theorem proving, and probabilistic reasoning.</p>
             <div className="lab-facts">
-              <div><strong>50</strong><span>random questions</span></div>
+              <div><strong>{attemptSize}</strong><span>random questions</span></div>
               <div><strong>∞</strong><span>time to think</span></div>
             </div>
+            <fieldset className="attempt-picker">
+              <legend>Questions per attempt</legend>
+              <div>
+                {ATTEMPT_SIZES.map((size) => (
+                  <button key={size} type="button" className={size === attemptSize ? 'selected' : ''} aria-pressed={size === attemptSize} onClick={() => onSizeChange(size)}>
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
             <div className="launch-actions">
-              <button className="primary-button" onClick={onStart}>Begin practice <Icon name="arrow" /></button>
+              <button className="primary-button" onClick={onStart}>Begin {attemptSize}-question practice <Icon name="arrow" /></button>
               <button className="text-link" onClick={onRevision}>Browse all questions <Icon name="book" /></button>
             </div>
           </div>
@@ -82,7 +91,7 @@ function StartScreen({ onStart, onRevision }) {
             <span className="node-label learning">LEARNING</span>
             <span className="node-label language">LANGUAGE</span>
             <span className="node-label probability">PROBABILITY</span>
-            <div className="signal-card"><span>Course coverage</span><strong>8 connected areas</strong><i><b /></i></div>
+            <div className="signal-card"><span>Course coverage</span><strong>{topics.length} connected areas</strong><i><b /></i></div>
           </div>
         </div>
 
@@ -116,12 +125,12 @@ function QuestionIndex({ questions, current, answers, results, onSelect }) {
   )
 }
 
-function QuizHeader({ answered, onExit }) {
+function QuizHeader({ answered, total, onExit }) {
   return (
     <header className="quiz-header">
       <button className="text-button" onClick={onExit}><Icon name="back" /> Exit attempt</button>
       <div className="quiz-brand"><span className="wordmark-mark">Q</span><span>Prep50</span></div>
-      <div className="answered-count"><span>{answered}</span> of {EXAM_SIZE} answered</div>
+      <div className="answered-count"><span>{answered}</span> of {total} answered</div>
     </header>
   )
 }
@@ -152,14 +161,14 @@ function QuestionPlate({ question, number, selected, onAnswer, results }) {
   )
 }
 
-function ConfirmScreen({ answers, onReturn, onSubmit }) {
-  const unanswered = EXAM_SIZE - Object.keys(answers).length
+function ConfirmScreen({ answers, total, onReturn, onSubmit }) {
+  const unanswered = total - Object.keys(answers).length
   return (
     <main className="confirm-shell">
       <div className="confirmation-plate">
         <span className="confirmation-mark"><Icon name="flag" size={28} /></span>
         <h1>{unanswered ? 'Your attempt has open records.' : 'Your attempt is ready.'}</h1>
-        <p>{unanswered ? `${unanswered} ${unanswered === 1 ? 'question is' : 'questions are'} still unanswered. You can submit now or return to complete them.` : 'All 50 questions have an answer. Submit when you are ready to see your score and review.'}</p>
+        <p>{unanswered ? `${unanswered} ${unanswered === 1 ? 'question is' : 'questions are'} still unanswered. You can submit now or return to complete them.` : `All ${total} questions have an answer. Submit when you are ready to see your score and review.`}</p>
         <div className="confirmation-stat"><strong>{Object.keys(answers).length}</strong><span>answered</span><strong>{unanswered}</strong><span>open</span></div>
         <div className="confirmation-actions">
           <button className="secondary-button" onClick={onReturn}><Icon name="back" /> Return to attempt</button>
@@ -266,7 +275,7 @@ const readAttempt = () => {
   try {
     const stored = JSON.parse(sessionStorage.getItem(sessionKey))
     const questions = stored?.questionIds?.map((id) => questionById.get(id)).filter(Boolean) ?? []
-    return questions.length === EXAM_SIZE
+    return isAttemptSize(questions.length)
       ? { questions, answers: stored.answers ?? {}, submitted: stored.submitted === true }
       : null
   } catch {
@@ -280,6 +289,7 @@ export default function App() {
   const [questions, setQuestions] = useState(savedAttempt?.questions ?? [])
   const [answers, setAnswers] = useState(savedAttempt?.answers ?? {})
   const [submitted, setSubmitted] = useState(savedAttempt?.submitted ?? false)
+  const [attemptSize, setAttemptSize] = useState(savedAttempt?.questions.length ?? DEFAULT_ATTEMPT_SIZE)
   const [current, setCurrent] = useState(0)
 
   const answeredCount = Object.keys(answers).length
@@ -311,7 +321,7 @@ export default function App() {
   }
 
   const startAttempt = () => {
-    setQuestions(makeAttempt())
+    setQuestions(makeAttempt(attemptSize))
     setAnswers({})
     setSubmitted(false)
     setCurrent(0)
@@ -322,15 +332,15 @@ export default function App() {
   const setQuestion = (index) => { setCurrent(index); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const nextUnanswered = useMemo(() => questions.findIndex((_, index) => answers[index] === undefined), [questions, answers])
 
-  if (route === '/') return <StartScreen onStart={startAttempt} onRevision={() => navigate('/revision')} />
+  if (route === '/') return <StartScreen attemptSize={attemptSize} onSizeChange={setAttemptSize} onStart={startAttempt} onRevision={() => navigate('/revision')} />
   if (route === '/revision') return <RevisionScreen onHome={() => navigate('/')} onStart={startAttempt} />
-  if (!questions.length) return <StartScreen onStart={startAttempt} onRevision={() => navigate('/revision')} />
-  if (route === '/submit') return <ConfirmScreen answers={answers} onReturn={() => navigate('/quiz')} onSubmit={() => { setSubmitted(true); navigate('/results') }} />
+  if (!questions.length) return <StartScreen attemptSize={attemptSize} onSizeChange={setAttemptSize} onStart={startAttempt} onRevision={() => navigate('/revision')} />
+  if (route === '/submit') return <ConfirmScreen answers={answers} total={questions.length} onReturn={() => navigate('/quiz')} onSubmit={() => { setSubmitted(true); navigate('/results') }} />
   if (submitted && route === '/results') return <ResultsScreen questions={questions} answers={answers} onReview={() => { setCurrent(0); navigate('/review') }} onRestart={startAttempt} onRevision={() => navigate('/revision')} />
 
   return (
     <div className="quiz-shell">
-      <QuizHeader answered={answeredCount} onExit={() => navigate('/')} />
+      <QuizHeader answered={answeredCount} total={questions.length} onExit={() => navigate('/')} />
       <div className="quiz-layout">
         <main>
           <QuestionPlate question={currentQuestion} number={current + 1} selected={answers[current]} onAnswer={answer} results={results} />
@@ -349,7 +359,7 @@ export default function App() {
         </main>
         <QuestionIndex questions={questions} current={current} answers={answers} results={results} onSelect={setQuestion} />
       </div>
-      {!results && <button className="mobile-submit" onClick={() => navigate('/submit')}>Review & submit · {answeredCount}/{EXAM_SIZE}</button>}
+      {!results && <button className="mobile-submit" onClick={() => navigate('/submit')}>Review & submit · {answeredCount}/{questions.length}</button>}
     </div>
   )
 }
