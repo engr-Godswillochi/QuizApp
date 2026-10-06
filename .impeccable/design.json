@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-06T14:09:19+01:00",
+  "title": "Design System: Prep50 Neural Signal Lab",
+  "extensions": {
+    "colorMeta": {
+      "laboratory-night": {
+        "role": "neutral",
+        "displayName": "Laboratory Night",
+        "canonical": "#060b1f",
+        "tonalRamp": ["oklch(15% 0.045 264)", "oklch(25% 0.045 264)", "oklch(35% 0.04 264)", "oklch(47% 0.035 264)", "oklch(60% 0.03 264)", "oklch(72% 0.024 264)", "oklch(84% 0.016 264)", "oklch(95% 0.008 264)"]
+      },
+      "rail-night": {
+        "role": "neutral",
+        "displayName": "Rail Night",
+        "canonical": "#080e25",
+        "tonalRamp": ["oklch(15% 0.05 264)", "oklch(25% 0.048 264)", "oklch(35% 0.043 264)", "oklch(47% 0.037 264)", "oklch(60% 0.03 264)", "oklch(72% 0.024 264)", "oklch(84% 0.016 264)", "oklch(95% 0.008 264)"]
+      },
+      "panel-deep": {
+        "role": "neutral",
+        "displayName": "Deep Panel",
+        "canonical": "#0d1532",
+        "tonalRamp": ["oklch(15% 0.055 265)", "oklch(25% 0.052 265)", "oklch(35% 0.048 265)", "oklch(47% 0.04 265)", "oklch(60% 0.032 265)", "oklch(72% 0.025 265)", "oklch(84% 0.016 265)", "oklch(95% 0.008 265)"]
+      },
+      "panel-raised": {
+        "role": "neutral",
+        "displayName": "Raised Panel",
+        "canonical": "#111c40",
+        "tonalRamp": ["oklch(15% 0.065 265)", "oklch(25% 0.062 265)", "oklch(35% 0.056 265)", "oklch(47% 0.047 265)", "oklch(60% 0.038 265)", "oklch(72% 0.028 265)", "oklch(84% 0.018 265)", "oklch(95% 0.009 265)"]
+      },
+      "text-bright": {
+        "role": "neutral",
+        "displayName": "Bright Text",
+        "canonical": "#f5f7ff",
+        "tonalRamp": ["oklch(15% 0.015 265)", "oklch(25% 0.014 265)", "oklch(35% 0.013 265)", "oklch(47% 0.012 265)", "oklch(60% 0.011 265)", "oklch(72% 0.01 265)", "oklch(84% 0.009 265)", "oklch(95% 0.008 265)"]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Muted Instrument Text",
+        "canonical": "#9aa9ca",
+        "tonalRamp": ["oklch(15% 0.045 260)", "oklch(25% 0.044 260)", "oklch(35% 0.042 260)", "oklch(47% 0.04 260)", "oklch(60% 0.037 260)", "oklch(72% 0.032 260)", "oklch(84% 0.022 260)", "oklch(95% 0.01 260)"]
+      },
+      "signal-line": {
+        "role": "neutral",
+        "displayName": "Signal Line",
+        "canonical": "#27355e",
+        "tonalRamp": ["oklch(15% 0.065 263)", "oklch(25% 0.063 263)", "oklch(35% 0.06 263)", "oklch(47% 0.053 263)", "oklch(60% 0.043 263)", "oklch(72% 0.033 263)", "oklch(84% 0.021 263)", "oklch(95% 0.01 263)"]
+      },
+      "signal-cyan": {
+        "role": "primary",
+        "displayName": "Signal Cyan",
+        "canonical": "#35d6ff",
+        "tonalRamp": ["oklch(15% 0.09 218)", "oklch(25% 0.12 218)", "oklch(35% 0.15 218)", "oklch(47% 0.18 218)", "oklch(60% 0.19 218)", "oklch(72% 0.17 218)", "oklch(84% 0.11 218)", "oklch(95% 0.035 218)"]
+      },
+      "signal-cyan-hover": {
+        "role": "primary",
+        "displayName": "Signal Cyan Hover",
+        "canonical": "#75e5ff",
+        "tonalRamp": ["oklch(15% 0.075 218)", "oklch(25% 0.1 218)", "oklch(35% 0.125 218)", "oklch(47% 0.15 218)", "oklch(60% 0.16 218)", "oklch(72% 0.145 218)", "oklch(84% 0.095 218)", "oklch(95% 0.03 218)"]
+      },
+      "connection-violet": {
+        "role": "secondary",
+        "displayName": "Connection Violet",
+        "canonical": "#8466ff",
+        "tonalRamp": ["oklch(15% 0.11 286)", "oklch(25% 0.15 286)", "oklch(35% 0.19 286)", "oklch(47% 0.23 286)", "oklch(60% 0.25 286)", "oklch(72% 0.2 286)", "oklch(84% 0.12 286)", "oklch(95% 0.035 286)"]
+      },
+      "current-pink": {
+        "role": "tertiary",
+        "displayName": "Current Pink",
+        "canonical": "#ff5daf",
+        "tonalRamp": ["oklch(15% 0.1 349)", "oklch(25% 0.15 349)", "oklch(35% 0.2 349)", "oklch(47% 0.25 349)", "oklch(60% 0.27 349)", "oklch(72% 0.22 349)", "oklch(84% 0.13 349)", "oklch(95% 0.04 349)"]
+      },
+      "correct-green": {
+        "role": "tertiary",
+        "displayName": "Correct Green",
+        "canonical": "#28d8a1",
+        "tonalRamp": ["oklch(15% 0.07 165)", "oklch(25% 0.105 165)", "oklch(35% 0.14 165)", "oklch(47% 0.17 165)", "oklch(60% 0.18 165)", "oklch(72% 0.155 165)", "oklch(84% 0.095 165)", "oklch(95% 0.03 165)"]
+      },
+      "incorrect-red": {
+        "role": "tertiary",
+        "displayName": "Incorrect Red",
+        "canonical": "#ff6575",
+        "tonalRamp": ["oklch(15% 0.08 20)", "oklch(25% 0.12 20)", "oklch(35% 0.16 20)", "oklch(47% 0.2 20)", "oklch(60% 0.22 20)", "oklch(72% 0.18 20)", "oklch(84% 0.11 20)", "oklch(95% 0.035 20)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Compressed Signal Display", "purpose": "Launch promises, completion messages, and score statements." },
+      "headline": { "displayName": "Question Headline", "purpose": "The current question and major state messages." },
+      "body": { "displayName": "Instrument Reading", "purpose": "Answers, explanations, and supporting copy." },
+      "label": { "displayName": "Signal Label", "purpose": "Topics, status, metadata, and compact numeric navigation." }
+    },
+    "shadows": [
+      { "name": "primary-action-lift", "value": "0 9px 28px rgba(53,214,255,.2)", "purpose": "Low cyan halo beneath the primary action." },
+      { "name": "primary-action-hover", "value": "0 13px 34px rgba(53,214,255,.28)", "purpose": "Stronger cyan halo for the raised hover state." },
+      { "name": "reading-plate", "value": "0 24px 64px rgba(0,0,0,.24)", "purpose": "Separates a long-form question surface from the night canvas." },
+      { "name": "feature-stage", "value": "0 32px 80px rgba(0,0,0,.28)", "purpose": "Grounds the signature neural network stage." },
+      { "name": "current-record-ring", "value": "0 0 0 2px var(--night), 0 0 0 4px var(--pink)", "purpose": "Keeps the current question visible around answered-state fills." }
+    ],
+    "motion": [
+      { "name": "control-response", "value": "160ms ease", "purpose": "Primary and secondary button lift, surface, and halo transitions." },
+      { "name": "answer-response", "value": "140ms ease", "purpose": "Answer-row border, surface, and two-pixel lateral response." },
+      { "name": "node-breath", "value": "3.4s ease-in-out infinite alternate", "purpose": "Gentle launch-screen breathing for network nodes; removed by reduced-motion preference." }
+    ],
+    "breakpoints": [
+      { "name": "compact-desktop", "value": "900px" },
+      { "name": "mobile", "value": "680px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The dominant next-step action for starting, advancing, submitting, or reviewing.",
+      "html": "<button class=\"ds-btn-primary\">Begin practice <svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button>",
+      "css": ".ds-btn-primary { min-height: 52px; border: 0; border-radius: 12px; padding: 0 22px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; color: #061020; background: var(--cyan, #35d6ff); font: 780 0.85rem/1.5 'Manrope Variable', sans-serif; cursor: pointer; box-shadow: 0 9px 28px rgba(53,214,255,.2); transition: transform .16s ease, background-color .16s ease, box-shadow .16s ease; } .ds-btn-primary:hover { background: #75e5ff; transform: translateY(-1px); box-shadow: 0 13px 34px rgba(53,214,255,.28); } .ds-btn-primary:focus-visible { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 3px; } .ds-btn-primary:active { transform: translateY(0); } .ds-btn-primary svg { flex: 0 0 auto; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A reversible or lower-priority action such as return, previous, or restart.",
+      "html": "<button class=\"ds-btn-secondary\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" aria-hidden=\"true\"><path d=\"M19 12H5m6 6-6-6 6-6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg> Previous</button>",
+      "css": ".ds-btn-secondary { min-height: 52px; border: 0; border-radius: 12px; padding: 0 22px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; color: #eaf0ff; background: var(--panel-2, #111c40); font: 780 0.85rem/1.5 'Manrope Variable', sans-serif; cursor: pointer; box-shadow: inset 0 0 0 1px var(--line, #27355e); transition: background-color .16s ease, transform .16s ease; } .ds-btn-secondary:hover { background: #172650; } .ds-btn-secondary:focus-visible { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 3px; } .ds-btn-secondary:active { transform: translateY(1px); } .ds-btn-secondary svg { flex: 0 0 auto; }"
+    },
+    {
+      "name": "Answer Option",
+      "kind": "input",
+      "refersTo": "answer-option",
+      "description": "A large radio-field row for one multiple-choice answer.",
+      "html": "<label class=\"ds-answer-option\"><input type=\"radio\" name=\"preview-answer\"><span class=\"ds-option-letter\">A</span><span class=\"ds-option-copy\">A knowledge representation that supports clear inference</span></label>",
+      "css": ".ds-answer-option { position: relative; display: grid; grid-template-columns: 42px 1fr; align-items: center; gap: 14px; min-height: 66px; padding: 11px 16px 11px 11px; border: 1px solid var(--line, #27355e); border-radius: 13px; color: #dce4f8; background: #0a122c; font: 400 .85rem/1.5 'Manrope Variable', sans-serif; cursor: pointer; transition: border-color .14s ease, background-color .14s ease, transform .14s ease; } .ds-answer-option:hover { border-color: #52689d; background: #101b3c; transform: translateX(2px); } .ds-answer-option input { position: absolute; opacity: 0; pointer-events: none; } .ds-option-letter { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 10px; color: var(--muted, #9aa9ca); background: #151f42; font-size: .7rem; font-weight: 820; } .ds-answer-option:has(input:checked) { border-color: var(--cyan, #35d6ff); background: #0a203b; } .ds-answer-option input:checked + .ds-option-letter { color: #061020; background: var(--cyan, #35d6ff); } .ds-answer-option input:focus-visible + .ds-option-letter { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Question Plate",
+      "kind": "card",
+      "refersTo": "question-plate",
+      "description": "The dominant flat reading surface for a question and its answer set.",
+      "html": "<article class=\"ds-question-plate\"><div class=\"ds-question-meta\"><span>Machine Learning</span><span>Record 12</span></div><h2>Which statement best describes supervised learning?</h2><p>Choose the strongest answer from the course material.</p></article>",
+      "css": ".ds-question-plate { max-width: 700px; padding: clamp(26px, 4.6vw, 54px); border-radius: 18px; color: #eef2ff; background: var(--panel, #0d1532); font-family: 'Manrope Variable', sans-serif; box-shadow: 0 24px 64px rgba(0,0,0,.24); } .ds-question-meta { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line, #27355e); color: var(--muted, #9aa9ca); font-size: .68rem; font-weight: 680; } .ds-question-meta span:first-child::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; background: var(--cyan, #35d6ff); box-shadow: 0 0 9px var(--cyan, #35d6ff); } .ds-question-plate h2 { max-width: 29ch; margin: clamp(26px, 4vw, 44px) 0 18px; font-size: clamp(1.45rem, 2.6vw, 2.3rem); line-height: 1.28; letter-spacing: -.03em; } .ds-question-plate p { margin: 0; color: var(--muted, #9aa9ca); font-size: .85rem; line-height: 1.5; } .ds-question-plate:focus-within { outline: 1px solid var(--cyan, #35d6ff); outline-offset: 3px; }"
+    },
+    {
+      "name": "Question Index",
+      "kind": "nav",
+      "refersTo": "index-button",
+      "description": "Compact record navigation showing dormant, answered, and current states.",
+      "html": "<nav class=\"ds-index\" aria-label=\"Question index preview\"><div class=\"ds-index-heading\"><span>Question index</span><strong>2/5</strong></div><div class=\"ds-index-grid\"><button class=\"ds-index-button ds-answered\">1</button><button class=\"ds-index-button ds-answered ds-current\" aria-current=\"step\">2</button><button class=\"ds-index-button\">3</button><button class=\"ds-index-button\">4</button><button class=\"ds-index-button\">5</button></div></nav>",
+      "css": ".ds-index { width: 250px; color: #eef2ff; font-family: 'Manrope Variable', sans-serif; } .ds-index-heading { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 14px; border-bottom: 2px solid var(--cyan, #35d6ff); font-size: .74rem; } .ds-index-heading strong { color: var(--cyan, #35d6ff); font-size: .68rem; font-variant-numeric: tabular-nums; } .ds-index-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; padding: 16px 0; border-bottom: 1px solid var(--line, #27355e); } .ds-index-button { aspect-ratio: 1; min-width: 0; border: 1px solid var(--line, #27355e); border-radius: 8px; color: #aebadb; background: var(--panel, #0d1532); font: 760 .64rem/1 'Manrope Variable', sans-serif; cursor: pointer; font-variant-numeric: tabular-nums; } .ds-index-button:hover { border-color: var(--cyan, #35d6ff); } .ds-index-button:focus-visible { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 3px; } .ds-index-button.ds-answered { color: #061020; background: var(--cyan, #35d6ff); border-color: var(--cyan, #35d6ff); } .ds-index-button.ds-current { box-shadow: 0 0 0 2px var(--night, #060b1f), 0 0 0 4px var(--pink, #ff5daf); }"
+    },
+    {
+      "name": "Quiz Header",
+      "kind": "nav",
+      "description": "A translucent sticky context bar balancing exit, identity, and answered progress.",
+      "html": "<header class=\"ds-quiz-header\"><button class=\"ds-exit\">← Exit attempt</button><div class=\"ds-quiz-brand\"><span>Q</span><strong>Prep50</strong></div><div class=\"ds-answered\"><strong>18</strong> of 50 answered</div></header>",
+      "css": ".ds-quiz-header { min-height: 70px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 24px; color: #eef2ff; background: rgba(6,11,31,.94); border-bottom: 1px solid var(--line, #27355e); backdrop-filter: blur(14px); font-family: 'Manrope Variable', sans-serif; } .ds-exit { justify-self: start; border: 0; padding: 8px 0; color: inherit; background: transparent; font-size: .73rem; font-weight: 720; cursor: pointer; } .ds-exit:hover { color: var(--cyan, #35d6ff); } .ds-exit:focus-visible { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 3px; } .ds-quiz-brand { display: flex; align-items: center; gap: 9px; font-size: .8rem; } .ds-quiz-brand span { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; color: #061020; background: var(--cyan, #35d6ff); font-weight: 850; box-shadow: 0 0 24px rgba(53,214,255,.24); } .ds-answered { justify-self: end; color: var(--muted, #9aa9ca); font-size: .7rem; font-variant-numeric: tabular-nums; } .ds-answered strong { color: var(--cyan, #35d6ff); font-weight: 850; }"
+    },
+    {
+      "name": "Neural Coverage Signal",
+      "kind": "custom",
+      "description": "The compact translucent readout embedded in the signature network stage.",
+      "html": "<div class=\"ds-signal-card\"><span>Course coverage</span><strong>8 connected areas</strong><i><b></b></i></div>",
+      "css": ".ds-signal-card { width: min(420px, calc(100% - 32px)); padding: 17px 18px; display: grid; grid-template-columns: 1fr auto; gap: 5px 18px; border: 1px solid #354775; border-radius: 13px; color: #f5f7ff; background: rgba(8,14,37,.88); backdrop-filter: blur(10px); font-family: 'Manrope Variable', sans-serif; } .ds-signal-card span { color: var(--muted, #9aa9ca); font-size: .6rem; } .ds-signal-card strong { font-size: .76rem; } .ds-signal-card i { grid-column: 1 / -1; height: 3px; background: #26345d; overflow: hidden; } .ds-signal-card b { display: block; width: 76%; height: 100%; background: linear-gradient(90deg, var(--cyan, #35d6ff), var(--violet, #8466ff), var(--pink, #ff5daf)); transition: width .16s ease; } .ds-signal-card:hover b { width: 82%; } .ds-signal-card:focus-within { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Neural Signal Lab",
+    "overview": "Prep50 is a midnight learning instrument: a quiet near-black laboratory where the student's progress appears as a network of live signals. The interface is compact, technical, and legible without becoming clinical; it turns repeated practice into the visible strengthening of connections across eight AI course areas.\n\nThe world stays flat and high-contrast wherever sustained reading happens, then spends glow selectively on active signals, focus, and state change. Manrope gives every role one coherent geometric voice, while cyan, violet, and pink separate comprehension, connection, and attention without competing for dominance.",
+    "keyCharacteristics": [
+      "Midnight laboratory surfaces with crisp, cool text.",
+      "Cyan-led action and progress signals.",
+      "Violet connections and pink current-record emphasis.",
+      "Flat reading plates with restrained, state-driven glow.",
+      "Compact geometric typography and tabular numeric data."
+    ],
+    "rules": [
+      { "name": "The Semantic Signal Rule", "body": "Cyan means comprehension or available action, violet means connection, pink means current attention, and green or red must not appear before submission except for genuine system-ready status.", "section": "colors" },
+      { "name": "The Rarity Makes It Bright Rule", "body": "Keep luminous color on a minority of each screen so every signal remains meaningful against the laboratory night.", "section": "colors" },
+      { "name": "The One Instrument Rule", "body": "Use Manrope for every interface and reading role; hierarchy comes from variable weight, scale, and spacing rather than introducing another family.", "section": "typography" },
+      { "name": "The Tight-Loud, Open-Quiet Rule", "body": "Large statements use compressed leading and tracking, while body copy uses relaxed leading for sustained reading.", "section": "typography" },
+      { "name": "The Reading Before Dashboard Rule", "body": "Give the current question the flexible column and strongest surface; the index supports navigation but never competes with the reading task.", "section": "layout" },
+      { "name": "The Uncovered Controls Rule", "body": "Mobile index and submission controls remain independently reachable in normal document flow, with no fixed overlay covering focus targets.", "section": "layout" },
+      { "name": "The Glow Follows State Rule", "body": "Glow belongs to live nodes, focus, the current record, and primary action—not to every border or container.", "section": "elevation" },
+      { "name": "The Flat Reading Rule", "body": "Question and explanation surfaces use contrast and thin rules first; reserve elevation for separating an entire reading plate from the surrounding canvas.", "section": "elevation" },
+      { "name": "The Radius Has Rank Rule", "body": "Small controls stay tighter than reading plates, and reading plates stay tighter than the signature network stage.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do keep the current question visually dominant and the index subordinate.",
+      "Do use semantic signal colors consistently across nodes, progress, focus, and review.",
+      "Do keep reading surfaces flat, crisp, and high-contrast.",
+      "Do preserve visible keyboard focus and reduced-motion behavior.",
+      "Do use tabular figures for scores, counts, progress, and record numbers."
+    ],
+    "donts": [
+      "Don't use green or red as decorative accents or expose correctness before submission.",
+      "Don't put glow on every card, divider, or label; glow must communicate live state.",
+      "Don't introduce a second typeface or a soft editorial aesthetic into the lab instrument.",
+      "Don't let a sticky or fixed mobile action cover index controls, content, or focus rings.",
+      "Don't turn the question surface into a dense dashboard or shrink answer rows below comfortable touch size."
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+tmp/
+.agents/
+.codex/
+.impeccable/review/
+AI_Dr. Ugwuishiwupart.pdf
+.DS_Store
+*.log
