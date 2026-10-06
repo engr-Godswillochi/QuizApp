@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-06T14:09:19+01:00",
+  "generatedAt": "2026-10-06T21:55:52+01:00",
   "title": "Design System: Prep50 Neural Signal Lab",
   "extensions": {
     "colorMeta": {
@@ -160,6 +160,29 @@
       "description": "The compact translucent readout embedded in the signature network stage.",
       "html": "<div class=\"ds-signal-card\"><span>Course coverage</span><strong>8 connected areas</strong><i><b></b></i></div>",
       "css": ".ds-signal-card { width: min(420px, calc(100% - 32px)); padding: 17px 18px; display: grid; grid-template-columns: 1fr auto; gap: 5px 18px; border: 1px solid #354775; border-radius: 13px; color: #f5f7ff; background: rgba(8,14,37,.88); backdrop-filter: blur(10px); font-family: 'Manrope Variable', sans-serif; } .ds-signal-card span { color: var(--muted, #9aa9ca); font-size: .6rem; } .ds-signal-card strong { font-size: .76rem; } .ds-signal-card i { grid-column: 1 / -1; height: 3px; background: #26345d; overflow: hidden; } .ds-signal-card b { display: block; width: 76%; height: 100%; background: linear-gradient(90deg, var(--cyan, #35d6ff), var(--violet, #8466ff), var(--pink, #ff5daf)); transition: width .16s ease; } .ds-signal-card:hover b { width: 82%; } .ds-signal-card:focus-within { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Revision Tools",
+      "kind": "input",
+      "refersTo": "revision-field",
+      "description": "The coordinated search, course-area filter, and answer-visibility controls for the 200-question revision bank.",
+      "html": "<div class=\"ds-revision-tools\"><label class=\"ds-search-field\"><span>Search questions</span><input type=\"search\" placeholder=\"Try Bayes, inference, recall...\"></label><label class=\"ds-select-field\"><span>Course area</span><select><option>All topics</option><option>Propositional logic</option><option>Natural language processing</option></select></label><button class=\"ds-answer-toggle\" aria-pressed=\"true\">Hide answers</button></div>",
+      "css": ".ds-revision-tools { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(210px, .45fr) auto; gap: 12px; align-items: end; padding: 18px 0; color: #eef2ff; background: var(--night, #060b1f); border-bottom: 1px solid var(--line, #27355e); font-family: 'Manrope Variable', sans-serif; } .ds-search-field, .ds-select-field { display: grid; gap: 7px; color: var(--muted, #9aa9ca); font-size: .61rem; } .ds-search-field input, .ds-select-field select { width: 100%; min-height: 46px; padding: 0 14px; border: 1px solid var(--line, #27355e); border-radius: 11px; color: #eef2ff; background: var(--panel, #0d1532); font: inherit; outline: 0; } .ds-search-field input::placeholder { color: #7281a4; } .ds-search-field input:focus, .ds-select-field select:focus { border-color: var(--cyan, #35d6ff); box-shadow: 0 0 0 3px rgba(53,214,255,.13); } .ds-answer-toggle { min-height: 46px; padding: 0 16px; border: 1px solid #43588e; border-radius: 11px; color: var(--cyan, #35d6ff); background: #101b3d; font-size: .7rem; font-weight: 780; cursor: pointer; } .ds-answer-toggle:focus-visible { outline: 3px solid color-mix(in srgb, var(--cyan, #35d6ff) 55%, transparent); outline-offset: 3px; } .ds-answer-toggle:active { background: #122144; } @media (max-width: 680px) { .ds-revision-tools { grid-template-columns: 1fr 1fr; padding: 12px 0; } .ds-search-field { grid-column: 1 / -1; } .ds-select-field select, .ds-answer-toggle { min-width: 0; font-size: .65rem; } }"
+    },
+    {
+      "name": "Difficulty Tags",
+      "kind": "chip",
+      "refersTo": "difficulty-tag",
+      "description": "Equal-treatment metadata tags for Core, Applied, and Challenge questions.",
+      "html": "<div class=\"ds-difficulty-tags\"><span>Core</span><span>Applied</span><span>Challenge</span></div>",
+      "css": ".ds-difficulty-tags { display: flex; align-items: center; gap: 10px; font-family: 'Manrope Variable', sans-serif; } .ds-difficulty-tags span { padding: 4px 7px; border-radius: 999px; color: var(--cyan, #35d6ff); background: #122144; font-size: .58rem; font-weight: 760; }"
+    },
+    {
+      "name": "Revision Record",
+      "kind": "card",
+      "description": "A flat ledger row showing one bank question, its difficulty, four options, and optional revealed explanation.",
+      "html": "<article class=\"ds-revision-item\"><div class=\"ds-revision-number\">137</div><div class=\"ds-revision-content\"><div class=\"ds-revision-meta\"><span>Non-monotonic reasoning &amp; probability</span><strong>Challenge</strong></div><h2>Which conclusion follows from the evidence?</h2><ol class=\"ds-revision-options\" type=\"A\"><li>First candidate</li><li class=\"ds-correct-option\">Second candidate</li><li>Third candidate</li><li>Fourth candidate</li></ol><div class=\"ds-revision-answer\"><span>Answer B</span><p>The explanation connects the correct choice directly to the course material.</p></div></div></article>",
+      "css": ".ds-revision-item { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 24px; padding: 34px 0; border-bottom: 1px solid var(--line, #27355e); color: #eef2ff; background: var(--night, #060b1f); font-family: 'Manrope Variable', sans-serif; } .ds-revision-number { color: #61709a; font-size: .72rem; font-weight: 760; font-variant-numeric: tabular-nums; } .ds-revision-meta { display: flex; align-items: center; gap: 10px; color: var(--muted, #9aa9ca); font-size: .65rem; } .ds-revision-meta strong { padding: 4px 7px; border-radius: 999px; color: var(--cyan, #35d6ff); background: #122144; font-size: .58rem; } .ds-revision-item h2 { max-width: 48ch; margin: 12px 0 20px; font-size: clamp(1.1rem, 2.3vw, 1.55rem); line-height: 1.4; letter-spacing: -.02em; } .ds-revision-options { margin: 0; padding-left: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 28px; color: #bac6e1; font-size: .76rem; line-height: 1.5; } .ds-revision-options li { padding: 8px 10px; border-radius: 8px; } .ds-revision-options .ds-correct-option { color: #071d1a; background: var(--green, #28d8a1); font-weight: 700; } .ds-revision-answer { margin-top: 20px; padding: 16px 18px; display: grid; grid-template-columns: auto 1fr; gap: 16px; border: 1px solid #255e5d; border-radius: 12px; background: #09282b; } .ds-revision-answer span { color: var(--green, #28d8a1); font-size: .66rem; font-weight: 850; white-space: nowrap; } .ds-revision-answer p { margin: 0; color: #c0ded7; font-size: .75rem; line-height: 1.55; } @media (max-width: 680px) { .ds-revision-item { grid-template-columns: 1fr; gap: 10px; padding: 28px 0; } .ds-revision-options { grid-template-columns: 1fr; } .ds-revision-answer { grid-template-columns: 1fr; gap: 7px; } }"
     }
   ],
   "narrative": {
@@ -170,15 +193,16 @@
       "Cyan-led action and progress signals.",
       "Violet connections and pink current-record emphasis.",
       "Flat reading plates with restrained, state-driven glow.",
-      "Compact geometric typography and tabular numeric data."
+      "Compact geometric typography, tabular numeric data, and route-stable study states."
     ],
     "rules": [
-      { "name": "The Semantic Signal Rule", "body": "Cyan means comprehension or available action, violet means connection, pink means current attention, and green or red must not appear before submission except for genuine system-ready status.", "section": "colors" },
+      { "name": "The Semantic Signal Rule", "body": "Cyan means comprehension or available action, violet means connection, pink means current attention, and green or red must not expose correctness during an active attempt; revision may use green only while answers are intentionally shown.", "section": "colors" },
       { "name": "The Rarity Makes It Bright Rule", "body": "Keep luminous color on a minority of each screen so every signal remains meaningful against the laboratory night.", "section": "colors" },
       { "name": "The One Instrument Rule", "body": "Use Manrope for every interface and reading role; hierarchy comes from variable weight, scale, and spacing rather than introducing another family.", "section": "typography" },
       { "name": "The Tight-Loud, Open-Quiet Rule", "body": "Large statements use compressed leading and tracking, while body copy uses relaxed leading for sustained reading.", "section": "typography" },
       { "name": "The Reading Before Dashboard Rule", "body": "Give the current question the flexible column and strongest surface; the index supports navigation but never competes with the reading task.", "section": "layout" },
       { "name": "The Uncovered Controls Rule", "body": "Mobile index and submission controls remain independently reachable in normal document flow, with no fixed overlay covering focus targets.", "section": "layout" },
+      { "name": "The Route Keeps Its Promise Rule", "body": "Keep launch, attempt, submission, results, review, and revision at their established URLs; redirect only when protected result content lacks the submitted state required to make it truthful.", "section": "layout" },
       { "name": "The Glow Follows State Rule", "body": "Glow belongs to live nodes, focus, the current record, and primary action—not to every border or container.", "section": "elevation" },
       { "name": "The Flat Reading Rule", "body": "Question and explanation surfaces use contrast and thin rules first; reserve elevation for separating an entire reading plate from the surrounding canvas.", "section": "elevation" },
       { "name": "The Radius Has Rank Rule", "body": "Small controls stay tighter than reading plates, and reading plates stay tighter than the signature network stage.", "section": "shapes" }
@@ -188,14 +212,16 @@
       "Do use semantic signal colors consistently across nodes, progress, focus, and review.",
       "Do keep reading surfaces flat, crisp, and high-contrast.",
       "Do preserve visible keyboard focus and reduced-motion behavior.",
-      "Do use tabular figures for scores, counts, progress, and record numbers."
+      "Do use tabular figures for scores, counts, progress, and record numbers.",
+      "Do keep revision search, topic filtering, answer visibility, and live result count understandable as one coordinated toolset."
     ],
     "donts": [
-      "Don't use green or red as decorative accents or expose correctness before submission.",
+      "Don't use green or red as decorative accents or expose correctness during an active attempt.",
       "Don't put glow on every card, divider, or label; glow must communicate live state.",
       "Don't introduce a second typeface or a soft editorial aesthetic into the lab instrument.",
       "Don't let a sticky or fixed mobile action cover index controls, content, or focus rings.",
-      "Don't turn the question surface into a dense dashboard or shrink answer rows below comfortable touch size."
+      "Don't turn the question surface into a dense dashboard or shrink answer rows below comfortable touch size.",
+      "Don't assign separate decorative colors to Core, Applied, and Challenge; correctness colors retain semantic priority."
     ]
   }
 }

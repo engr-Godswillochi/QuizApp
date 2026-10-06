@@ -43,6 +43,7 @@ rounded:
   signal-label: "5px"
   index: "8px"
   mark: "10px"
+  field: "11px"
   control: "12px"
   option: "13px"
   plate: "18px"
@@ -97,6 +98,26 @@ components:
     textColor: "{colors.text-muted}"
     typography: "{typography.label}"
     rounded: "{rounded.index}"
+  revision-field:
+    backgroundColor: "{colors.panel-deep}"
+    textColor: "#eef2ff"
+    typography: "{typography.body}"
+    rounded: "{rounded.field}"
+    padding: "0 14px"
+    height: "46px"
+  answer-toggle:
+    backgroundColor: "#101b3d"
+    textColor: "{colors.signal-cyan}"
+    typography: "{typography.label}"
+    rounded: "{rounded.field}"
+    padding: "0 16px"
+    height: "46px"
+  difficulty-tag:
+    backgroundColor: "#122144"
+    textColor: "{colors.signal-cyan}"
+    typography: "{typography.label}"
+    rounded: "{rounded.full}"
+    padding: "4px 7px"
 ---
 
 # Design System: Prep50 Neural Signal Lab
@@ -115,7 +136,7 @@ The world stays flat and high-contrast wherever sustained reading happens, then 
 - Cyan-led action and progress signals.
 - Violet connections and pink current-record emphasis.
 - Flat reading plates with restrained, state-driven glow.
-- Compact geometric typography and tabular numeric data.
+- Compact geometric typography, tabular numeric data, and route-stable study states.
 
 ## Colors
 
@@ -132,7 +153,7 @@ The palette behaves like instrumentation on a dark bench: neutral surfaces disap
 ### Tertiary
 
 - **Current Pink:** Identifies the current record and rare moments requiring immediate visual attention.
-- **Correct Green:** Appears only after submission or in genuine ready/success status.
+- **Correct Green:** Appears in explicit answer-reveal contexts after submission or in revision, and in genuine ready/success status.
 - **Incorrect Red:** Appears only after submission to identify an incorrect response.
 
 ### Neutral
@@ -147,7 +168,7 @@ The palette behaves like instrumentation on a dark bench: neutral surfaces disap
 
 ### Named Rules
 
-**The Semantic Signal Rule.** Cyan means comprehension or available action, violet means connection, pink means current attention, and green or red must not appear before submission except for genuine system-ready status.
+**The Semantic Signal Rule.** Cyan means comprehension or available action, violet means connection, pink means current attention, and green or red must not expose correctness during an active attempt; revision may use green only while answers are intentionally shown.
 
 **The Rarity Makes It Bright Rule.** Keep luminous color on a minority of each screen so every signal remains meaningful against the laboratory night.
 
@@ -175,15 +196,34 @@ The palette behaves like instrumentation on a dark bench: neutral surfaces disap
 
 ## Layout
 
-The launch screen uses a compact 178px course rail beside a flexible main stage. Its hero is capped at 1160px and balances a slightly narrower copy column against the neural network. The quiz uses a 1120px container with a flexible reading column and a 250px sticky question index; reading surfaces keep their own internal rhythm rather than inheriting dashboard density.
+The launch screen uses a compact 178px course rail beside a flexible main stage. Its hero is capped at 1160px and balances a slightly narrower copy column against the neural network. The quiz uses a 1120px container with a flexible reading column and a 250px sticky question index; reading surfaces keep their own internal rhythm rather than inheriting dashboard density. The revision bank also uses a 1120px container, but replaces the quiz split with a full-width, filterable reading ledger.
 
 At 900px, the rail compresses to 112px, the hero becomes an even two-column split, and the question index moves into normal flow with ten columns. At 680px, the rail becomes a 66px course bar, the hero stacks copy before network, the quiz index returns to five columns inside a bounded 228px scroll region, and submission remains in document flow. Touch actions become full-width where the content sequence benefits from an unambiguous next step.
 
 Spacing follows a compact 4px-derived rhythm, with 8–16px used inside controls, 24–32px between local groups, and 48–64px for major regions. Containers preserve at least 12px of mobile edge clearance and 20–24px on wider quiz views.
 
+### Routed Experience
+
+- **`/`:** Launch, product orientation, and entry points for a new attempt or the complete revision bank.
+- **`/quiz`:** The active 50-question attempt with question navigation and progress state.
+- **`/submit`:** The explicit answered/open-record checkpoint before scoring.
+- **`/results`:** The submitted score, topic ledger, and onward actions.
+- **`/review`:** The submitted attempt replay with correct, incorrect, and explanation states exposed.
+- **`/revision`:** The independent, searchable 200-question bank with topic filtering and answer disclosure.
+
+An active attempt persists for the browser tab session: its randomized question IDs, selected answers, and submitted status survive reloads and route changes without implying an account or cross-device history. Results and review are gated by submitted state; when an in-progress attempt tries to open either route, the interface replaces it with `/quiz`. Starting a fresh attempt from a protected result state also replaces that stale history entry so Back does not reopen obsolete results.
+
+### Revision Layout
+
+The revision surface places a 70px translucent navigation bar above a large introduction and live result count. A second sticky tool row sits directly below it with a flexible search field, narrower topic selector, and answer-visibility toggle. Each record is a flat two-column ledger row—72px number rail plus content—with two-column answer choices and an optional green explanation panel. Off-screen records use content visibility containment so the full 200-question page stays light to scroll.
+
+At 680px, the revision header compresses to 62px and hides the centered wordmark, the introduction and count stack, and the tool row becomes a two-column grid with search spanning both columns. Record number and content stack into one column; answer options and the revealed explanation also become single-column reading flows.
+
 **The Reading Before Dashboard Rule.** Give the current question the flexible column and strongest surface; the index supports navigation but never competes with the reading task.
 
 **The Uncovered Controls Rule.** Mobile index and submission controls remain independently reachable in normal document flow, with no fixed overlay covering focus targets.
+
+**The Route Keeps Its Promise Rule.** Keep launch, attempt, submission, results, review, and revision at their established URLs; redirect only when protected result content lacks the submitted state required to make it truthful.
 
 ## Elevation & Depth
 
@@ -233,17 +273,30 @@ Reading containers feel like stable work plates, not collectible cards.
 
 ### Inputs / Fields
 
-Answer rows behave as large radio fields rather than generic form inputs.
+Attempt answer rows behave as large radio fields rather than generic form inputs. Revision controls use the same dark surfaces and cyan focus language at a denser, browsing-oriented scale.
 
 - **Style:** Each row is at least 66px high with a 13px radius, one-pixel Signal Line border, dark answer surface, 42px option marker, and a three-column label layout.
 - **Hover:** Shift 2px right while brightening both surface and border over 140ms.
 - **Selected:** Signal Cyan border and marker, with a deeper cyan-tinted surface.
 - **Focus:** The hidden radio transfers a visible 3px focus outline to the option marker.
 - **Review:** Correct uses green border, surface, marker, and check; the chosen incorrect answer uses the equivalent red treatment.
+- **Revision Search:** A 46px-high search field with an 11px radius, Deep Panel fill, Signal Line border, and contextual placeholder; focus changes the border to cyan and adds a low cyan ring.
+- **Topic Select:** Matches the search field exactly and filters to one of the eight course areas or all topics.
+- **Answer Toggle:** A 46px-high outlined control with cyan text and `aria-pressed`; it changes between “Show answers” and “Hide answers” for the complete filtered list.
+
+### Chips
+
+Difficulty is compact metadata, not a scoring color scale. **Core**, **Applied**, and **Challenge** all use the same full pill shape, cyan text, and dark-blue fill so the label communicates level without competing with correctness colors.
 
 ### Navigation
 
 The sticky quiz header is a quiet 70px translucent band with exit at the leading edge, centered identity, and answered count at the trailing edge. The question index uses five compact square cells per row on desktop, expands to ten columns in the intermediate single-column layout, then returns to five within the bounded mobile scroller. Cyan fill means answered, the pink outer ring means current, and review replaces cyan with green or red.
+
+The revision header uses the same three-part band with Home, centered identity, and a compact Start practice action. On mobile the identity drops out, leaving the two destination actions clear. Browser history is part of the navigation model: route changes reset scroll to the top, while Back and Forward restore the matching surface.
+
+### Revision Records
+
+Revision records are separated by Signal Line rules rather than individual card shells. Each record shows a zero-padded bank ID, topic, difficulty pill, question, four lettered options, and—when answers are visible—a green correct option plus an explanation panel labeled with the answer letter. Search covers question text, explanations, and option text; the live shown-count and polite list updates make filtering legible. A no-results state asks the student to clear the search or choose another course area.
 
 ### Neural Network Stage
 
@@ -258,11 +311,13 @@ The launch signature is a 24px-radius, 520px-tall instrument panel containing fi
 - **Do** keep reading surfaces flat, crisp, and high-contrast.
 - **Do** preserve visible keyboard focus and reduced-motion behavior.
 - **Do** use tabular figures for scores, counts, progress, and record numbers.
+- **Do** keep revision search, topic filtering, answer visibility, and live result count understandable as one coordinated toolset.
 
 ### Don't:
 
-- **Don't** use green or red as decorative accents or expose correctness before submission.
+- **Don't** use green or red as decorative accents or expose correctness during an active attempt.
 - **Don't** put glow on every card, divider, or label; glow must communicate live state.
 - **Don't** introduce a second typeface or a soft editorial aesthetic into the lab instrument.
 - **Don't** let a sticky or fixed mobile action cover index controls, content, or focus rings.
 - **Don't** turn the question surface into a dense dashboard or shrink answer rows below comfortable touch size.
+- **Don't** assign separate decorative colors to Core, Applied, and Challenge; correctness colors retain semantic priority.

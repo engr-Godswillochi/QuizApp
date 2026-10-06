@@ -32,6 +32,9 @@ The app is used for independent exam practice on desktop or mobile. Attempts are
 - Randomly select 50 distinct questions for every new attempt.
 - Use four answer options per question with one correct answer.
 - Provide navigation, progress, completion, scoring, and answer review.
+- Give launch, quiz, submission, results, answer review, and revision their own browser URLs.
+- Provide a searchable revision bank containing all 200 questions, correct answers, and explanations.
+- Mix core recall with scenario, comparison, application, calculation, and inference questions.
 - No backend, accounts, remote database, or server-side state.
 - Keep the production bundle small and compatible with static Vercel deployment.
 

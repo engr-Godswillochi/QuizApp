@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import { canOpenRoute, isProtectedResultRoute } from './navigation.js'
 import { questionBank, topics } from './questions.js'
 
 const EXAM_SIZE = 50
@@ -30,7 +31,7 @@ const makeAttempt = () => {
   return pool.slice(0, EXAM_SIZE)
 }
 
-function StartScreen({ onStart }) {
+function StartScreen({ onStart, onRevision }) {
   return (
     <main className="neural-shell">
       <aside className="lab-rail">
@@ -58,7 +59,10 @@ function StartScreen({ onStart }) {
               <div><strong>50</strong><span>random questions</span></div>
               <div><strong>∞</strong><span>time to think</span></div>
             </div>
-            <button className="primary-button" onClick={onStart}>Begin practice <Icon name="arrow" /></button>
+            <div className="launch-actions">
+              <button className="primary-button" onClick={onStart}>Begin practice <Icon name="arrow" /></button>
+              <button className="text-link" onClick={onRevision}>Browse all questions <Icon name="book" /></button>
+            </div>
           </div>
 
           <div className="network-stage" aria-hidden="true">
@@ -166,7 +170,7 @@ function ConfirmScreen({ answers, onReturn, onSubmit }) {
   )
 }
 
-function ResultsScreen({ questions, answers, onReview, onRestart }) {
+function ResultsScreen({ questions, answers, onReview, onRestart, onRevision }) {
   const correct = questions.filter((question, index) => answers[index] === question.answer).length
   const percentage = Math.round((correct / questions.length) * 100)
   const message = percentage >= 80 ? 'Strong command of the material.' : percentage >= 60 ? 'A solid attempt. Review the weak sections.' : 'Use the review to rebuild the foundations.'
@@ -194,40 +198,139 @@ function ResultsScreen({ questions, answers, onReview, onRestart }) {
       <div className="results-actions">
         <button className="primary-button" onClick={onReview}>Review answers <Icon name="arrow" /></button>
         <button className="secondary-button" onClick={onRestart}><Icon name="refresh" /> New random attempt</button>
+        <button className="secondary-button" onClick={onRevision}><Icon name="book" /> Open revision bank</button>
       </div>
     </main>
   )
 }
 
+function RevisionScreen({ onHome, onStart }) {
+  const [query, setQuery] = useState('')
+  const [topic, setTopic] = useState('All topics')
+  const [showAnswers, setShowAnswers] = useState(true)
+  const deferredQuery = useDeferredValue(query.trim().toLowerCase())
+  const visibleQuestions = useMemo(() => questionBank.filter((question) => {
+    const matchesTopic = topic === 'All topics' || question.topic === topic
+    const haystack = `${question.question} ${question.explanation} ${question.options.join(' ')}`.toLowerCase()
+    return matchesTopic && (!deferredQuery || haystack.includes(deferredQuery))
+  }), [deferredQuery, topic])
+
+  return (
+    <div className="revision-shell">
+      <header className="revision-nav">
+        <button className="text-button" onClick={onHome}><Icon name="back" /> Home</button>
+        <div className="quiz-brand"><span className="wordmark-mark">Q</span><span>Prep50</span></div>
+        <button className="nav-practice" onClick={onStart}>Start practice</button>
+      </header>
+      <main className="revision-main">
+        <section className="revision-intro">
+          <div>
+            <h1>Know the whole bank.</h1>
+            <p>Search all 200 questions, inspect the correct answers, and revise one course area at a time.</p>
+          </div>
+          <div className="revision-count"><strong>{visibleQuestions.length}</strong><span>questions shown</span></div>
+        </section>
+
+        <section className="revision-tools" aria-label="Revision filters">
+          <label className="search-field"><span>Search questions</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Bayes, inference, recall..." /></label>
+          <label className="select-field"><span>Course area</span><select value={topic} onChange={(event) => setTopic(event.target.value)}><option>All topics</option>{topics.map((item) => <option key={item.topic}>{item.topic}</option>)}</select></label>
+          <button className="answer-toggle" aria-pressed={showAnswers} onClick={() => setShowAnswers((value) => !value)}>{showAnswers ? 'Hide answers' : 'Show answers'}</button>
+        </section>
+
+        {visibleQuestions.length ? (
+          <section className="revision-list" aria-live="polite">
+            {visibleQuestions.map((question, index) => (
+              <article className="revision-item" key={question.id}>
+                <div className="revision-number">{String(question.id).padStart(3, '0')}</div>
+                <div className="revision-content">
+                  <div className="revision-meta"><span>{question.topic}</span><strong>{question.difficulty}</strong></div>
+                  <h2>{question.question}</h2>
+                  <ol className="revision-options" type="A">{question.options.map((option, optionIndex) => <li className={showAnswers && optionIndex === question.answer ? 'correct-option' : ''} key={option}>{option}</li>)}</ol>
+                  {showAnswers ? <div className="revision-answer"><span>Answer {String.fromCharCode(65 + question.answer)}</span><p>{question.explanation}</p></div> : null}
+                </div>
+              </article>
+            ))}
+          </section>
+        ) : (
+          <div className="revision-empty"><strong>No matching questions.</strong><p>Clear the search or choose another course area.</p></div>
+        )}
+      </main>
+    </div>
+  )
+}
+
+const sessionKey = 'prep50-attempt-v1'
+const questionById = new Map(questionBank.map((question) => [question.id, question]))
+
+const readAttempt = () => {
+  try {
+    const stored = JSON.parse(sessionStorage.getItem(sessionKey))
+    const questions = stored?.questionIds?.map((id) => questionById.get(id)).filter(Boolean) ?? []
+    return questions.length === EXAM_SIZE
+      ? { questions, answers: stored.answers ?? {}, submitted: stored.submitted === true }
+      : null
+  } catch {
+    return null
+  }
+}
+
 export default function App() {
-  const [view, setView] = useState('start')
-  const [questions, setQuestions] = useState([])
-  const [answers, setAnswers] = useState({})
+  const [route, setRoute] = useState(window.location.pathname)
+  const [savedAttempt] = useState(readAttempt)
+  const [questions, setQuestions] = useState(savedAttempt?.questions ?? [])
+  const [answers, setAnswers] = useState(savedAttempt?.answers ?? {})
+  const [submitted, setSubmitted] = useState(savedAttempt?.submitted ?? false)
   const [current, setCurrent] = useState(0)
 
   const answeredCount = Object.keys(answers).length
-  const results = view === 'review'
+  const results = submitted && route === '/review'
   const currentQuestion = questions[current]
+
+  useEffect(() => {
+    const onPopState = () => setRoute(window.location.pathname)
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
+
+  useEffect(() => {
+    if (!questions.length) return
+    sessionStorage.setItem(sessionKey, JSON.stringify({ questionIds: questions.map(({ id }) => id), answers, submitted }))
+  }, [questions, answers, submitted])
+
+  useEffect(() => {
+    if (questions.length && !canOpenRoute(route, submitted)) {
+      window.history.replaceState({}, '', '/quiz')
+      setRoute('/quiz')
+    }
+  }, [questions.length, route, submitted])
+
+  const navigate = (path, replace = false) => {
+    window.history[replace ? 'replaceState' : 'pushState']({}, '', path)
+    setRoute(path)
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }
 
   const startAttempt = () => {
     setQuestions(makeAttempt())
     setAnswers({})
+    setSubmitted(false)
     setCurrent(0)
-    setView('quiz')
-    window.scrollTo({ top: 0, behavior: 'instant' })
+    navigate('/quiz', isProtectedResultRoute(route))
   }
 
   const answer = (option) => setAnswers((previous) => ({ ...previous, [current]: option }))
   const setQuestion = (index) => { setCurrent(index); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const nextUnanswered = useMemo(() => questions.findIndex((_, index) => answers[index] === undefined), [questions, answers])
 
-  if (view === 'start') return <StartScreen onStart={startAttempt} />
-  if (view === 'confirm') return <ConfirmScreen answers={answers} onReturn={() => setView('quiz')} onSubmit={() => setView('results')} />
-  if (view === 'results') return <ResultsScreen questions={questions} answers={answers} onReview={() => { setCurrent(0); setView('review') }} onRestart={startAttempt} />
+  if (route === '/') return <StartScreen onStart={startAttempt} onRevision={() => navigate('/revision')} />
+  if (route === '/revision') return <RevisionScreen onHome={() => navigate('/')} onStart={startAttempt} />
+  if (!questions.length) return <StartScreen onStart={startAttempt} onRevision={() => navigate('/revision')} />
+  if (route === '/submit') return <ConfirmScreen answers={answers} onReturn={() => navigate('/quiz')} onSubmit={() => { setSubmitted(true); navigate('/results') }} />
+  if (submitted && route === '/results') return <ResultsScreen questions={questions} answers={answers} onReview={() => { setCurrent(0); navigate('/review') }} onRestart={startAttempt} onRevision={() => navigate('/revision')} />
 
   return (
     <div className="quiz-shell">
-      <QuizHeader answered={answeredCount} onExit={() => setView('start')} />
+      <QuizHeader answered={answeredCount} onExit={() => navigate('/')} />
       <div className="quiz-layout">
         <main>
           <QuestionPlate question={currentQuestion} number={current + 1} selected={answers[current]} onAnswer={answer} results={results} />
@@ -235,18 +338,18 @@ export default function App() {
             <button className="secondary-button" disabled={current === 0} onClick={() => setQuestion(current - 1)}><Icon name="back" /> Previous</button>
             <span>{current + 1} / {questions.length}</span>
             {results ? (
-              current < questions.length - 1 ? <button className="primary-button" onClick={() => setQuestion(current + 1)}>Next answer <Icon name="arrow" /></button> : <button className="primary-button" onClick={() => setView('results')}>Back to results <Icon name="arrow" /></button>
+              current < questions.length - 1 ? <button className="primary-button" onClick={() => setQuestion(current + 1)}>Next answer <Icon name="arrow" /></button> : <button className="primary-button" onClick={() => navigate('/results')}>Back to results <Icon name="arrow" /></button>
             ) : current < questions.length - 1 ? (
               <button className="primary-button" onClick={() => setQuestion(current + 1)}>Next question <Icon name="arrow" /></button>
             ) : (
-              <button className="primary-button" onClick={() => setView('confirm')}>Review & submit <Icon name="flag" /></button>
+              <button className="primary-button" onClick={() => navigate('/submit')}>Review & submit <Icon name="flag" /></button>
             )}
           </nav>
           {!results && current === questions.length - 1 && nextUnanswered >= 0 && <button className="open-record" onClick={() => setQuestion(nextUnanswered)}>Go to first unanswered question</button>}
         </main>
         <QuestionIndex questions={questions} current={current} answers={answers} results={results} onSelect={setQuestion} />
       </div>
-      {!results && <button className="mobile-submit" onClick={() => setView('confirm')}>Review & submit · {answeredCount}/{EXAM_SIZE}</button>}
+      {!results && <button className="mobile-submit" onClick={() => navigate('/submit')}>Review & submit · {answeredCount}/{EXAM_SIZE}</button>}
     </div>
   )
 }

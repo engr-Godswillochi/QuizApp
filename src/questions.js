@@ -246,13 +246,25 @@ const rotate = (items, amount) => {
   return [...items.slice(offset), ...items.slice(0, offset)]
 }
 
-export const questionBank = sections.flatMap((section, sectionIndex) =>
-  section.facts.map(([term, definition], factIndex) => {
-    const id = sectionIndex * 25 + factIndex + 1
+const stemFor = (variant, term, definition) => {
+  const stems = [
+    `Which statement correctly explains ${term}?`,
+    `A student writes: “${definition}” Which concept are they describing?`,
+    `Complete this course-note definition: ${term} is...`,
+    `You meet this idea in an exam scenario: ${definition} What should you identify?`,
+    `Choose the most accurate description of ${term}.`,
+  ]
+  return stems[variant]
+}
+
+const coreQuestions = sections.flatMap((section, sectionIndex) =>
+  section.facts.slice(0, 20).map(([term, definition], factIndex) => {
+    const id = sectionIndex * 20 + factIndex + 1
     const neighbourFacts = [1, 6, 11].map(
       (step) => section.facts[(factIndex + step) % section.facts.length],
     )
-    const asksForTerm = id % 2 === 0
+    const variant = id % 5
+    const asksForTerm = variant === 1 || variant === 3
     const correct = asksForTerm ? term : definition
     const distractors = neighbourFacts.map((fact) => (asksForTerm ? fact[0] : fact[1]))
     const options = rotate([correct, ...distractors], id % 4)
@@ -260,9 +272,8 @@ export const questionBank = sections.flatMap((section, sectionIndex) =>
     return {
       id,
       topic: section.topic,
-      question: asksForTerm
-        ? `Which term best matches this description? “${definition}”`
-        : `What best describes ${term}?`,
+      difficulty: variant === 3 ? 'Applied' : 'Core',
+      question: stemFor(variant, term, definition),
       options,
       answer: options.indexOf(correct),
       explanation: `${term}: ${definition}`,
@@ -270,7 +281,70 @@ export const questionBank = sections.flatMap((section, sectionIndex) =>
   }),
 )
 
-export const topics = sections.map(({ topic, facts }) => ({ topic, count: facts.length }))
+const challengeQuestions = [
+  ['Propositional logic', 'Let P be true and Q be false. What is the truth value of P → Q?', ['True, because P is true', 'False, because a true antecedent leads to a false consequent', 'True, because Q is false', 'Cannot be determined'], 1, 'An implication is false only when its antecedent is true and its consequent is false.'],
+  ['Propositional logic', 'Which expression is logically equivalent to ¬(P ∧ Q)?', ['¬P ∧ ¬Q', '¬P ∨ ¬Q', 'P ∨ Q', 'P → Q'], 1, 'By De Morgan’s law, the negation of a conjunction becomes a disjunction of the negations.'],
+  ['Propositional logic', 'From “If the model trains, the loss falls” and “the loss did not fall,” what follows?', ['The model trained', 'The data were correct', 'The model did not train', 'Nothing follows'], 2, 'Modus tollens infers ¬P from P → Q and ¬Q.'],
+  ['Propositional logic', 'P ⊕ Q is true in which case?', ['P and Q are both true', 'P and Q are both false', 'Exactly one of P and Q is true', 'Whenever P implies Q'], 2, 'Exclusive OR is true when exactly one input is true.'],
+  ['Propositional logic', 'A formula is true for some truth assignments and false for others. How is it classified?', ['Tautology', 'Contradiction', 'Contingency', 'Biconditional'], 2, 'A contingency is neither always true nor always false.'],
+
+  ['Predicate logic', 'Which formula best represents “Every robot has a sensor”?', ['∃x(Robot(x) ∧ Sensor(x))', '∀x(Robot(x) → Sensor(x))', '∀x(Robot(x) ∧ Sensor(x))', '∃x(Robot(x) → Sensor(x))'], 1, 'The universal conditional restricts the claim to objects that are robots.'],
+  ['Predicate logic', 'The negation of “Every student passed” is:', ['No student passed', 'Every student failed', 'At least one student did not pass', 'At least one student passed'], 2, 'Negating a universal produces an existential counterexample.'],
+  ['Predicate logic', 'Why can ∀x∃y Loves(x,y) differ from ∃y∀x Loves(x,y)?', ['Quantifier order can change who may depend on whom', 'Universal and existential quantifiers are interchangeable', 'The first contains a free variable', 'Only the second has a domain'], 0, 'In the first formula, each x may have a different y; the second requires one y for every x.'],
+  ['Predicate logic', 'From ∀x Intelligent(x), which inference is licensed for a named object Ada?', ['∃x ¬Intelligent(x)', 'Intelligent(Ada)', '∀x Ada(x)', '¬Intelligent(Ada)'], 1, 'Universal instantiation applies the universal claim to any named member of the domain.'],
+  ['Predicate logic', 'A formula contains x outside the scope of every quantifier. What is x?', ['A constant', 'A bound variable', 'A free variable', 'A model'], 2, 'A variable not governed by a quantifier is free.'],
+
+  ['Machine learning foundations', 'A model scores 99% on training data but 61% on unseen data. What is the clearest diagnosis?', ['Underfitting', 'Overfitting', 'Normalization', 'Dimensionality reduction'], 1, 'The large train-test gap is a classic sign of overfitting.'],
+  ['Machine learning foundations', 'Why must test data remain separate during training?', ['To increase the number of epochs', 'To provide an unbiased estimate on unseen examples', 'To remove all categorical features', 'To set the learning rate'], 1, 'Using test data to train leaks information and makes evaluation optimistic.'],
+  ['Machine learning foundations', 'A feature ranges from 0 to 1,000,000 while another ranges from 0 to 1. Which preprocessing step is most relevant?', ['Feature scaling', 'Label encoding', 'Tokenization', 'Beam search'], 0, 'Feature scaling prevents magnitude alone from dominating many learning algorithms.'],
+  ['Machine learning foundations', 'If gradient descent repeatedly overshoots the minimum, what setting is the first suspect?', ['The test label', 'The learning rate is too high', 'The number of classes', 'The sample space'], 1, 'An excessive learning rate can make optimization jump across the minimum.'],
+  ['Machine learning foundations', 'A pretrained image model is adapted to identify crop disease using a smaller dataset. This is:', ['Cross-validation', 'Transfer learning', 'Clustering', 'Standardization'], 1, 'Transfer learning reuses representations learned on a prior task.'],
+
+  ['Supervised learning & evaluation', 'A disease detector finds 90 of 100 sick patients and raises 30 false alarms. What is its recall?', ['60%', '75%', '90%', '120%'], 2, 'Recall is true positives divided by all actual positives: 90/100 = 90%.'],
+  ['Supervised learning & evaluation', 'When false positives are especially costly, which metric deserves close attention?', ['Precision', 'Recall only', 'Training epochs', 'Mean feature value'], 0, 'Precision measures how many predicted positives are actually positive.'],
+  ['Supervised learning & evaluation', 'Which model is naturally described as many randomized trees voting together?', ['Logistic regression', 'Random forest', 'Support vector regression', 'Naive Bayes'], 1, 'A random forest aggregates many randomized decision trees.'],
+  ['Supervised learning & evaluation', 'Predicting tomorrow’s temperature in degrees is primarily what task?', ['Classification', 'Clustering', 'Regression', 'Association mining'], 2, 'Temperature is a continuous numerical target, so the task is regression.'],
+  ['Supervised learning & evaluation', 'A model has high bias and low variance. Which behavior is most likely?', ['It memorizes noise', 'It underfits the main pattern', 'It changes wildly across samples', 'It always achieves perfect recall'], 1, 'High bias usually indicates assumptions that are too restrictive to capture the pattern.'],
+
+  ['Unsupervised & reinforcement learning', 'K-means alternates between which two operations?', ['Labeling and testing', 'Assigning points to centroids and recomputing centroids', 'Encoding and decoding text', 'Exploration and backpropagation'], 1, 'K-means repeatedly assigns points to the nearest centroid and updates centroid positions.'],
+  ['Unsupervised & reinforcement learning', 'A bank wants to flag unusual transactions without labels for every fraud case. Which task fits best?', ['Regression', 'Anomaly detection', 'Machine translation', 'Universal instantiation'], 1, 'Anomaly detection searches for observations that depart from normal patterns.'],
+  ['Unsupervised & reinforcement learning', 'An agent always chooses the action currently believed best. It is emphasizing:', ['Exploration', 'Exploitation', 'Clustering', 'Skolemization'], 1, 'Exploitation uses current knowledge to select the highest-valued action.'],
+  ['Unsupervised & reinforcement learning', 'What problem can arise if an agent never explores?', ['It cannot use a reward', 'It may never discover a better action', 'Its states become labels', 'Its policy becomes a dataset'], 1, 'Without exploration, the agent can remain stuck with a suboptimal action.'],
+  ['Unsupervised & reinforcement learning', 'A smaller discount factor makes an agent value which rewards more strongly?', ['Distant future rewards', 'Immediate rewards', 'Only negative rewards', 'Rewards from other agents'], 1, 'The discount factor controls how strongly future rewards contribute to present value.'],
+
+  ['Natural language processing', 'The word “bank” means different things in “river bank” and “bank account.” Which task selects the intended meaning?', ['Tokenization', 'Word-sense disambiguation', 'Stemming', 'OCR'], 1, 'Word-sense disambiguation uses context to select the intended meaning.'],
+  ['Natural language processing', 'In “Ada built a robot. She tested it,” which task links “She” to Ada and “it” to the robot?', ['Coreference resolution', 'Sentiment analysis', 'Morphological analysis', 'Beam search'], 0, 'Coreference resolution links expressions that refer to the same entities.'],
+  ['Natural language processing', 'Why might a translation system use subword tokenization?', ['To remove every rare word', 'To handle rare words and productive word pieces', 'To guarantee perfect grammar', 'To replace attention'], 1, 'Subwords let a model compose rare or unseen words from smaller recurring units.'],
+  ['Natural language processing', 'A search engine ranks documents against a query. This is primarily:', ['Information retrieval', 'Speech recognition', 'Pragmatics', 'Lemmatization'], 0, 'Information retrieval finds and ranks documents relevant to a query.'],
+  ['Natural language processing', 'During translation, the decoder keeps several promising partial sentences instead of only one. Which strategy is this?', ['Gradient descent', 'Beam search', 'K-means', 'Model checking'], 1, 'Beam search retains multiple high-scoring partial sequences during decoding.'],
+
+  ['Resolution & theorem proving', 'Resolving (P ∨ Q) with (¬P ∨ R) produces:', ['P ∨ ¬P', 'Q ∨ R', 'P ∧ R', '¬Q ∨ R'], 1, 'Resolution removes complementary P and ¬P, then combines the remaining literals.'],
+  ['Resolution & theorem proving', 'In proof by refutation, what is added to the knowledge base?', ['The theorem twice', 'The negation of the desired conclusion', 'An unrelated axiom', 'The empty clause'], 1, 'Refutation assumes the negation of the goal and seeks a contradiction.'],
+  ['Resolution & theorem proving', 'What does deriving the empty clause signify?', ['The clauses are all optional', 'A contradiction has been reached', 'A new free variable is needed', 'The theorem is false'], 1, 'The empty clause represents falsehood and closes a resolution refutation.'],
+  ['Resolution & theorem proving', 'Why is unification needed in first-order resolution?', ['To sort clauses alphabetically', 'To make predicate expressions match through substitutions', 'To remove every quantifier without replacement', 'To calculate probabilities'], 1, 'Unification finds substitutions that make predicate expressions compatible.'],
+  ['Resolution & theorem proving', 'A proof method derives only conclusions entailed by its premises. It has which property?', ['Completeness', 'Soundness', 'Monotonicity', 'Exploration'], 1, 'Soundness means the proof system does not derive invalid conclusions.'],
+
+  ['Non-monotonic reasoning & probability', 'You conclude birds normally fly, then learn Tweety is a penguin and withdraw the conclusion. This illustrates:', ['Monotonic deduction', 'Non-monotonic inference', 'Universal instantiation', 'Feature scaling'], 1, 'Non-monotonic reasoning permits conclusions to be withdrawn when exceptions appear.'],
+  ['Non-monotonic reasoning & probability', 'A system treats every fact not stored as false. Which assumption is it using?', ['Open-world assumption', 'Closed-world assumption', 'Bayesian likelihood', 'Independent events'], 1, 'The closed-world assumption equates absence from the knowledge base with falsity.'],
+  ['Non-monotonic reasoning & probability', 'A medical test is positive. Bayes’ theorem is used mainly to compute:', ['The prior before any evidence', 'The posterior probability of disease given the positive result', 'The number of possible symptoms', 'A truth-table row'], 1, 'Bayes’ theorem updates the disease probability after observing the test result.'],
+  ['Non-monotonic reasoning & probability', 'Two events cannot happen together. They are:', ['Independent', 'Mutually exclusive', 'Conditionally certain', 'Defeasible'], 1, 'Mutually exclusive events have no shared outcomes.'],
+  ['Non-monotonic reasoning & probability', 'A fair coin is tossed 10 times and the number of heads is counted. Which distribution models the count?', ['Normal distribution', 'Binomial distribution', 'Uniform predicate', 'Poisson logic'], 1, 'The binomial distribution counts successes in a fixed number of independent Bernoulli trials.'],
+].map(([topic, question, options, answer, explanation], index) => ({
+  id: 161 + index,
+  topic,
+  difficulty: 'Challenge',
+  question,
+  options,
+  answer,
+  explanation,
+}))
+
+export const questionBank = [...coreQuestions, ...challengeQuestions]
+
+export const topics = sections.map(({ topic }) => ({
+  topic,
+  count: questionBank.filter((question) => question.topic === topic).length,
+}))
 
 if (questionBank.length !== 200) {
   throw new Error(`Expected 200 questions, received ${questionBank.length}.`)
