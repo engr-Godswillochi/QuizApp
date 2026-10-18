@@ -1,6 +1,6 @@
 ---
 name: Prep50 Neural Signal Lab
-description: A midnight learning instrument for source-aligned COS 438 exam practice.
+description: A midnight learning instrument for source-aligned COS 438 and COS 412 exam practice.
 colors:
   laboratory-night: "#060b1f"
   rail-night: "#080e25"
@@ -126,7 +126,7 @@ components:
 
 **Creative North Star: "The Neural Signal Lab"**
 
-Prep50 is a midnight learning instrument: a quiet near-black laboratory where the student's progress appears as a network of live signals. The interface is compact, technical, and legible without becoming clinical; it turns repeated practice into the visible strengthening of connections across eight AI course areas.
+Prep50 is a midnight learning instrument: a quiet near-black laboratory where the student's progress appears as a network of live signals. A course ledger separates COS 438 and COS 412 before study begins, then each course keeps its own bank, attempt, results, review, and revision space.
 
 The world stays flat and high-contrast wherever sustained reading happens, then spends glow selectively on active signals, focus, and state change. Manrope gives every role one coherent geometric voice, while cyan, violet, and pink separate comprehension, connection, and attention without competing for dominance.
 

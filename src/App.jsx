@@ -1,7 +1,7 @@
 import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { ATTEMPT_SIZES, DEFAULT_ATTEMPT_SIZE, isAttemptSize } from './attempt.js'
 import { canOpenRoute, isProtectedResultRoute } from './navigation.js'
-import { questionBank, topics } from './questions.js'
+import { coursePath, courses, parseCourseRoute } from './courses.js'
 
 const Icon = ({ name, size = 18 }) => {
   const paths = {
@@ -21,7 +21,7 @@ const secureRandom = (max) => {
   return bucket[0] % max
 }
 
-const makeAttempt = (size) => {
+const makeAttempt = (questionBank, size) => {
   const pool = [...questionBank]
   for (let index = pool.length - 1; index > 0; index -= 1) {
     const swapIndex = secureRandom(index + 1)
@@ -30,15 +30,45 @@ const makeAttempt = (size) => {
   return pool.slice(0, size)
 }
 
-function StartScreen({ attemptSize, onSizeChange, onStart, onRevision }) {
+function CourseHub({ onSelect }) {
+  const totalQuestions = courses.reduce((total, course) => total + course.questionBank.length, 0)
+
+  return (
+    <main className="course-hub">
+      <header className="hub-header">
+        <div className="lab-brand"><span className="lab-mark">Q</span><strong>Prep50</strong></div>
+        <div className="hub-total"><strong>{totalQuestions}</strong><span>source-aligned questions</span></div>
+      </header>
+      <section className="hub-main">
+        <div className="hub-intro">
+          <h1>Choose your<br />course signal.</h1>
+          <p>Each course keeps its own question bank, revision library, progress, and submitted review state.</p>
+        </div>
+        <div className="course-ledger" aria-label="Available courses">
+          {courses.map((course) => (
+            <button className={`course-row course-${course.accent}`} key={course.id} onClick={() => onSelect(course)}>
+              <span className="course-code">{course.code}</span>
+              <span className="course-summary"><strong>{course.title}</strong><small>{course.description}</small></span>
+              <span className="course-stats"><strong>{course.questionBank.length}</strong><small>questions · {course.topics.length} topics</small></span>
+              <span className="course-arrow"><Icon name="arrow" /></span>
+            </button>
+          ))}
+        </div>
+      </section>
+      <footer className="hub-footer"><span>One frontend. Separate course banks.</span><span>No account required.</span></footer>
+    </main>
+  )
+}
+
+function StartScreen({ course, attemptSize, onSizeChange, onStart, onRevision, onCourses }) {
   return (
     <main className="neural-shell">
       <aside className="lab-rail">
-        <div className="lab-brand"><span className="lab-mark">Q</span><strong>Prep50</strong></div>
-        <div className="rail-course"><span>COS 438</span><strong>AI II</strong></div>
+        <button className="lab-brand lab-brand-button" onClick={onCourses}><span className="lab-mark">Q</span><strong>Prep50</strong></button>
+        <div className="rail-course"><span>{course.code}</span><strong>{course.shortTitle}</strong></div>
         <div className="rail-stats" aria-label="Course bank details">
-          <div><span>Questions</span><strong>{questionBank.length}</strong></div>
-          <div><span>Topics</span><strong>{String(topics.length).padStart(2, '0')}</strong></div>
+          <div><span>Questions</span><strong>{course.questionBank.length}</strong></div>
+          <div><span>Topics</span><strong>{String(course.topics.length).padStart(2, '0')}</strong></div>
           <div><span>Attempt</span><strong>{attemptSize}</strong></div>
         </div>
         <span className="rail-note">Source-aligned practice</span>
@@ -46,14 +76,14 @@ function StartScreen({ attemptSize, onSizeChange, onStart, onRevision }) {
 
       <section className="lab-main">
         <header className="lab-topbar">
-          <div><span>COS 438</span><strong>Artificial Intelligence II</strong></div>
+          <div><span>{course.code}</span><strong>{course.title}</strong></div>
           <span className="ready-signal"><i /> System ready</span>
         </header>
 
         <div className="lab-hero">
           <div className="lab-copy">
             <h1>Train the<br />connections.</h1>
-            <p>Practice directly from your course material. Each attempt builds a fresh path through logic, intelligent agents, machine learning, NLP, theorem proving, and probabilistic reasoning.</p>
+            <p>Practice directly from your course material. Each attempt builds a fresh path through {course.description.toLowerCase()}</p>
             <div className="lab-facts">
               <div><strong>{attemptSize}</strong><span>random questions</span></div>
               <div><strong>∞</strong><span>time to think</span></div>
@@ -87,16 +117,16 @@ function StartScreen({ attemptSize, onSizeChange, onStart, onRevision }) {
                 {[[58,348],[90,142],[144,266],[164,444],[222,326],[246,116],[303,210],[334,416],[368,84],[391,273],[492,158],[518,368],[548,245]].map(([cx, cy], index) => <circle key={index} cx={cx} cy={cy} r={index % 4 === 0 ? 9 : 5} />)}
               </g>
             </svg>
-            <span className="node-label logic">LOGIC</span>
-            <span className="node-label learning">LEARNING</span>
-            <span className="node-label language">LANGUAGE</span>
-            <span className="node-label probability">PROBABILITY</span>
-            <div className="signal-card"><span>Course coverage</span><strong>{topics.length} connected areas</strong><i><b /></i></div>
+            <span className="node-label logic">{course.signalLabels[0]}</span>
+            <span className="node-label learning">{course.signalLabels[1]}</span>
+            <span className="node-label language">{course.signalLabels[2]}</span>
+            <span className="node-label probability">{course.signalLabels[3]}</span>
+            <div className="signal-card"><span>Course coverage</span><strong>{course.topics.length} connected areas</strong><i><b /></i></div>
           </div>
         </div>
 
         <footer className="lab-footer">
-          <div><Icon name="book" size={17} /><span>Built from AI — Dr. Ugwuishiwu</span></div>
+          <div><Icon name="book" size={17} /><span>Built from {course.sourceLabel}</span></div>
           <span>Answers are revealed after submission</span>
         </footer>
       </section>
@@ -125,11 +155,11 @@ function QuestionIndex({ questions, current, answers, results, onSelect }) {
   )
 }
 
-function QuizHeader({ answered, total, onExit }) {
+function QuizHeader({ course, answered, total, onExit }) {
   return (
     <header className="quiz-header">
       <button className="text-button" onClick={onExit}><Icon name="back" /> Exit attempt</button>
-      <div className="quiz-brand"><span className="wordmark-mark">Q</span><span>Prep50</span></div>
+      <div className="quiz-brand"><span className="wordmark-mark">Q</span><span>Prep50</span><small>{course.code}</small></div>
       <div className="answered-count"><span>{answered}</span> of {total} answered</div>
     </header>
   )
@@ -179,7 +209,7 @@ function ConfirmScreen({ answers, total, onReturn, onSubmit }) {
   )
 }
 
-function ResultsScreen({ questions, answers, onReview, onRestart, onRevision }) {
+function ResultsScreen({ course, questions, answers, onReview, onRestart, onRevision }) {
   const correct = questions.filter((question, index) => answers[index] === question.answer).length
   const percentage = Math.round((correct / questions.length) * 100)
   const message = percentage >= 80 ? 'Strong command of the material.' : percentage >= 60 ? 'A solid attempt. Review the weak sections.' : 'Use the review to rebuild the foundations.'
@@ -192,7 +222,7 @@ function ResultsScreen({ questions, answers, onReview, onRestart, onRevision }) 
 
   return (
     <main className="results-shell">
-      <header className="results-head"><div className="quiz-brand"><span className="wordmark-mark">Q</span><span>Prep50</span></div><span>Attempt complete</span></header>
+      <header className="results-head"><div className="quiz-brand"><span className="wordmark-mark">Q</span><span>Prep50</span><small>{course.code}</small></div><span>Attempt complete</span></header>
       <section className="score-section">
         <div className="score-number"><strong>{percentage}</strong><span>%</span></div>
         <div><h1>{message}</h1><p>You answered {correct} of {questions.length} questions correctly.</p></div>
@@ -213,16 +243,16 @@ function ResultsScreen({ questions, answers, onReview, onRestart, onRevision }) 
   )
 }
 
-function RevisionScreen({ onHome, onStart }) {
+function RevisionScreen({ course, onHome, onStart }) {
   const [query, setQuery] = useState('')
   const [topic, setTopic] = useState('All topics')
   const [showAnswers, setShowAnswers] = useState(true)
   const deferredQuery = useDeferredValue(query.trim().toLowerCase())
-  const visibleQuestions = useMemo(() => questionBank.filter((question) => {
+  const visibleQuestions = useMemo(() => course.questionBank.filter((question) => {
     const matchesTopic = topic === 'All topics' || question.topic === topic
     const haystack = `${question.question} ${question.explanation} ${question.options.join(' ')}`.toLowerCase()
     return matchesTopic && (!deferredQuery || haystack.includes(deferredQuery))
-  }), [deferredQuery, topic])
+  }), [course.questionBank, deferredQuery, topic])
 
   return (
     <div className="revision-shell">
@@ -234,15 +264,15 @@ function RevisionScreen({ onHome, onStart }) {
       <main className="revision-main">
         <section className="revision-intro">
           <div>
-            <h1>Know the whole bank.</h1>
-            <p>Search all {questionBank.length} questions, inspect the correct answers, and revise one course area at a time.</p>
+            <h1>Know the {course.code} bank.</h1>
+            <p>Search all {course.questionBank.length} questions, inspect the correct answers, and revise one course area at a time.</p>
           </div>
           <div className="revision-count"><strong>{visibleQuestions.length}</strong><span>questions shown</span></div>
         </section>
 
         <section className="revision-tools" aria-label="Revision filters">
-          <label className="search-field"><span>Search questions</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Bayes, inference, recall..." /></label>
-          <label className="select-field"><span>Course area</span><select value={topic} onChange={(event) => setTopic(event.target.value)}><option>All topics</option>{topics.map((item) => <option key={item.topic}>{item.topic}</option>)}</select></label>
+          <label className="search-field"><span>Search questions</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={course.searchPlaceholder} /></label>
+          <label className="select-field"><span>Course area</span><select value={topic} onChange={(event) => setTopic(event.target.value)}><option>All topics</option>{course.topics.map((item) => <option key={item.topic}>{item.topic}</option>)}</select></label>
           <button className="answer-toggle" aria-pressed={showAnswers} onClick={() => setShowAnswers((value) => !value)}>{showAnswers ? 'Hide answers' : 'Show answers'}</button>
         </section>
 
@@ -268,32 +298,41 @@ function RevisionScreen({ onHome, onStart }) {
   )
 }
 
-const sessionKey = 'prep50-attempt-v1'
-const questionById = new Map(questionBank.map((question) => [question.id, question]))
+const EMPTY_ATTEMPT = { questions: [], answers: {}, submitted: false }
+const questionMaps = new Map(courses.map((course) => [course.id, new Map(course.questionBank.map((question) => [question.id, question]))]))
+const sessionKeyFor = (course) => `prep50-${course.id}-attempt-v2`
 
-const readAttempt = () => {
+const readAttempt = (course) => {
   try {
-    const stored = JSON.parse(sessionStorage.getItem(sessionKey))
+    const raw = sessionStorage.getItem(sessionKeyFor(course)) ?? (course.id === 'cos438' ? sessionStorage.getItem('prep50-attempt-v1') : null)
+    const stored = JSON.parse(raw)
+    const questionById = questionMaps.get(course.id)
     const questions = stored?.questionIds?.map((id) => questionById.get(id)).filter(Boolean) ?? []
     return isAttemptSize(questions.length)
       ? { questions, answers: stored.answers ?? {}, submitted: stored.submitted === true }
-      : null
+      : EMPTY_ATTEMPT
   } catch {
-    return null
+    return EMPTY_ATTEMPT
   }
 }
 
 export default function App() {
   const [route, setRoute] = useState(window.location.pathname)
-  const [savedAttempt] = useState(readAttempt)
-  const [questions, setQuestions] = useState(savedAttempt?.questions ?? [])
-  const [answers, setAnswers] = useState(savedAttempt?.answers ?? {})
-  const [submitted, setSubmitted] = useState(savedAttempt?.submitted ?? false)
-  const [attemptSize, setAttemptSize] = useState(savedAttempt?.questions.length ?? DEFAULT_ATTEMPT_SIZE)
-  const [current, setCurrent] = useState(0)
+  const [attempts, setAttempts] = useState(() => Object.fromEntries(courses.map((course) => [course.id, readAttempt(course)])))
+  const [attemptSizes, setAttemptSizes] = useState(() => Object.fromEntries(courses.map((course) => {
+    const saved = readAttempt(course)
+    return [course.id, saved.questions.length || DEFAULT_ATTEMPT_SIZE]
+  })))
+  const [currentByCourse, setCurrentByCourse] = useState(() => Object.fromEntries(courses.map((course) => [course.id, 0])))
+
+  const { course, page } = parseCourseRoute(route)
+  const attempt = course ? attempts[course.id] ?? EMPTY_ATTEMPT : EMPTY_ATTEMPT
+  const { questions, answers, submitted } = attempt
+  const attemptSize = course ? attemptSizes[course.id] ?? DEFAULT_ATTEMPT_SIZE : DEFAULT_ATTEMPT_SIZE
+  const current = course ? currentByCourse[course.id] ?? 0 : 0
 
   const answeredCount = Object.keys(answers).length
-  const results = submitted && route === '/review'
+  const results = submitted && page === 'review'
   const currentQuestion = questions[current]
 
   useEffect(() => {
@@ -303,16 +342,17 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    if (!questions.length) return
-    sessionStorage.setItem(sessionKey, JSON.stringify({ questionIds: questions.map(({ id }) => id), answers, submitted }))
-  }, [questions, answers, submitted])
+    if (!course || !questions.length) return
+    sessionStorage.setItem(sessionKeyFor(course), JSON.stringify({ questionIds: questions.map(({ id }) => id), answers, submitted }))
+  }, [course, questions, answers, submitted])
 
   useEffect(() => {
-    if (questions.length && !canOpenRoute(route, submitted)) {
-      window.history.replaceState({}, '', '/quiz')
-      setRoute('/quiz')
+    if (course && questions.length && !canOpenRoute(`/${page}`, submitted)) {
+      const quizPath = coursePath(course, 'quiz')
+      window.history.replaceState({}, '', quizPath)
+      setRoute(quizPath)
     }
-  }, [questions.length, route, submitted])
+  }, [course, page, questions.length, submitted])
 
   const navigate = (path, replace = false) => {
     window.history[replace ? 'replaceState' : 'pushState']({}, '', path)
@@ -320,27 +360,52 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }
 
-  const startAttempt = () => {
-    setQuestions(makeAttempt(attemptSize))
-    setAnswers({})
-    setSubmitted(false)
-    setCurrent(0)
-    navigate('/quiz', isProtectedResultRoute(route))
+  const startAttempt = (targetCourse = course) => {
+    if (!targetCourse) return
+    const size = attemptSizes[targetCourse.id] ?? DEFAULT_ATTEMPT_SIZE
+    const nextAttempt = { questions: makeAttempt(targetCourse.questionBank, size), answers: {}, submitted: false }
+    setAttempts((previous) => ({ ...previous, [targetCourse.id]: nextAttempt }))
+    setCurrentByCourse((previous) => ({ ...previous, [targetCourse.id]: 0 }))
+    navigate(coursePath(targetCourse, 'quiz'), isProtectedResultRoute(`/${page}`))
   }
 
-  const answer = (option) => setAnswers((previous) => ({ ...previous, [current]: option }))
-  const setQuestion = (index) => { setCurrent(index); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const setAttemptSize = (size) => {
+    if (!course || !isAttemptSize(size)) return
+    setAttemptSizes((previous) => ({ ...previous, [course.id]: size }))
+  }
+
+  const answer = (option) => {
+    if (!course) return
+    setAttempts((previous) => ({
+      ...previous,
+      [course.id]: { ...(previous[course.id] ?? EMPTY_ATTEMPT), answers: { ...(previous[course.id]?.answers ?? {}), [current]: option } },
+    }))
+  }
+
+  const setQuestion = (index) => {
+    if (!course) return
+    setCurrentByCourse((previous) => ({ ...previous, [course.id]: index }))
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const submitAttempt = () => {
+    if (!course) return
+    setAttempts((previous) => ({ ...previous, [course.id]: { ...(previous[course.id] ?? EMPTY_ATTEMPT), submitted: true } }))
+    navigate(coursePath(course, 'results'))
+  }
+
   const nextUnanswered = useMemo(() => questions.findIndex((_, index) => answers[index] === undefined), [questions, answers])
 
-  if (route === '/') return <StartScreen attemptSize={attemptSize} onSizeChange={setAttemptSize} onStart={startAttempt} onRevision={() => navigate('/revision')} />
-  if (route === '/revision') return <RevisionScreen onHome={() => navigate('/')} onStart={startAttempt} />
-  if (!questions.length) return <StartScreen attemptSize={attemptSize} onSizeChange={setAttemptSize} onStart={startAttempt} onRevision={() => navigate('/revision')} />
-  if (route === '/submit') return <ConfirmScreen answers={answers} total={questions.length} onReturn={() => navigate('/quiz')} onSubmit={() => { setSubmitted(true); navigate('/results') }} />
-  if (submitted && route === '/results') return <ResultsScreen questions={questions} answers={answers} onReview={() => { setCurrent(0); navigate('/review') }} onRestart={startAttempt} onRevision={() => navigate('/revision')} />
+  if (!course) return <CourseHub onSelect={(selectedCourse) => navigate(coursePath(selectedCourse))} />
+  if (page === 'start') return <StartScreen course={course} attemptSize={attemptSize} onSizeChange={setAttemptSize} onStart={() => startAttempt(course)} onRevision={() => navigate(coursePath(course, 'revision'))} onCourses={() => navigate('/')} />
+  if (page === 'revision') return <RevisionScreen course={course} onHome={() => navigate(coursePath(course))} onStart={() => startAttempt(course)} />
+  if (!questions.length) return <StartScreen course={course} attemptSize={attemptSize} onSizeChange={setAttemptSize} onStart={() => startAttempt(course)} onRevision={() => navigate(coursePath(course, 'revision'))} onCourses={() => navigate('/')} />
+  if (page === 'submit') return <ConfirmScreen answers={answers} total={questions.length} onReturn={() => navigate(coursePath(course, 'quiz'))} onSubmit={submitAttempt} />
+  if (submitted && page === 'results') return <ResultsScreen course={course} questions={questions} answers={answers} onReview={() => { setQuestion(0); navigate(coursePath(course, 'review')) }} onRestart={() => startAttempt(course)} onRevision={() => navigate(coursePath(course, 'revision'))} />
 
   return (
     <div className="quiz-shell">
-      <QuizHeader answered={answeredCount} total={questions.length} onExit={() => navigate('/')} />
+      <QuizHeader course={course} answered={answeredCount} total={questions.length} onExit={() => navigate(coursePath(course))} />
       <div className="quiz-layout">
         <main>
           <QuestionPlate question={currentQuestion} number={current + 1} selected={answers[current]} onAnswer={answer} results={results} />
@@ -348,18 +413,18 @@ export default function App() {
             <button className="secondary-button" disabled={current === 0} onClick={() => setQuestion(current - 1)}><Icon name="back" /> Previous</button>
             <span>{current + 1} / {questions.length}</span>
             {results ? (
-              current < questions.length - 1 ? <button className="primary-button" onClick={() => setQuestion(current + 1)}>Next answer <Icon name="arrow" /></button> : <button className="primary-button" onClick={() => navigate('/results')}>Back to results <Icon name="arrow" /></button>
+              current < questions.length - 1 ? <button className="primary-button" onClick={() => setQuestion(current + 1)}>Next answer <Icon name="arrow" /></button> : <button className="primary-button" onClick={() => navigate(coursePath(course, 'results'))}>Back to results <Icon name="arrow" /></button>
             ) : current < questions.length - 1 ? (
               <button className="primary-button" onClick={() => setQuestion(current + 1)}>Next question <Icon name="arrow" /></button>
             ) : (
-              <button className="primary-button" onClick={() => navigate('/submit')}>Review & submit <Icon name="flag" /></button>
+              <button className="primary-button" onClick={() => navigate(coursePath(course, 'submit'))}>Review & submit <Icon name="flag" /></button>
             )}
           </nav>
           {!results && current === questions.length - 1 && nextUnanswered >= 0 && <button className="open-record" onClick={() => setQuestion(nextUnanswered)}>Go to first unanswered question</button>}
         </main>
         <QuestionIndex questions={questions} current={current} answers={answers} results={results} onSelect={setQuestion} />
       </div>
-      {!results && <button className="mobile-submit" onClick={() => navigate('/submit')}>Review & submit · {answeredCount}/{questions.length}</button>}
+      {!results && <button className="mobile-submit" onClick={() => navigate(coursePath(course, 'submit'))}>Review & submit · {answeredCount}/{questions.length}</button>}
     </div>
   )
 }
