@@ -19,7 +19,7 @@ test('COS 412 covers six balanced areas with substantial practical work', () => 
   assert.equal(cos412Topics.length, 6)
   assert.deepEqual(cos412Topics.map(({ count }) => count), Array(6).fill(50))
   assert.ok(cos412QuestionBank.filter(({ difficulty }) => ['Applied', 'Challenge'].includes(difficulty)).length >= 240)
-  assert.equal(cos412QuestionBank.filter(({ question }) => /Which term best|What best describes/.test(question)).length, 0)
+  assert.equal(cos412QuestionBank.filter(({ question }) => /Which term best|What best describes|A reviewer encounters|Which explanation would be technically correct/i.test(question)).length, 0)
 })
 
 test('COS 412 includes formalization, computation, proof, and Z scenarios', () => {

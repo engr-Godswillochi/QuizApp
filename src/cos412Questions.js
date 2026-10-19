@@ -98,24 +98,32 @@ const rotate = (items, amount) => {
   return [...items.slice(offset), ...items.slice(0, offset)]
 }
 
+const coreStems = [
+  (term) => `What is meant by ${term}?`,
+  (term) => `Which statement correctly defines ${term}?`,
+  (term) => `In formal methods, what does ${term} refer to?`,
+  (term) => `Which description of ${term} is accurate?`,
+  (term) => `How should ${term} be understood?`,
+  (term) => `Choose the correct meaning of ${term}.`,
+  (term) => `Which statement about ${term} is true?`,
+  (term) => `What does the term ${term} describe?`,
+  (term) => `Which option gives the right meaning of ${term}?`,
+  (term) => `What is the best definition of ${term}?`,
+]
+
 const coreQuestions = sections.flatMap((section, sectionIndex) =>
   section.facts.map(([term, definition], factIndex) => {
     const id = sectionIndex * 10 + factIndex + 1
-    const asksForTerm = factIndex % 2 === 0
     const nearby = [2, 5, 8].map((step) => section.facts[(factIndex + step) % section.facts.length])
-    const correct = asksForTerm ? term : definition
-    const options = rotate([correct, ...nearby.map((fact) => (asksForTerm ? fact[0] : fact[1]))], id % 4)
-    const question = asksForTerm
-      ? `A reviewer encounters this in a system specification: “${definition}” Which formal-method concept should they record?`
-      : `Which explanation would be technically correct if a COS 412 solution uses ${term}?`
+    const options = rotate([definition, ...nearby.map((fact) => fact[1])], id % 4)
 
     return {
       id,
       topic: section.topic,
       difficulty: factIndex < 5 ? 'Core' : 'Applied',
-      question,
+      question: coreStems[factIndex](term),
       options,
-      answer: options.indexOf(correct),
+      answer: options.indexOf(definition),
       explanation: `${term}: ${definition}`,
     }
   }),
@@ -204,7 +212,22 @@ const advancedQuestions = cos412AdvancedQuestions.map((question, index) => ({
   id: coreQuestions.length + challengeQuestions.length + index + 1,
 }))
 
-export const cos412QuestionBank = [...coreQuestions, ...challengeQuestions, ...advancedQuestions]
+const mixedQuestions = sections.flatMap(({ topic }) => {
+  const core = coreQuestions.filter((question) => question.topic === topic)
+  const challenge = challengeQuestions.filter((question) => question.topic === topic)
+  const advanced = advancedQuestions.filter((question) => question.topic === topic)
+
+  return core.flatMap((question, index) => [
+    question,
+    challenge[index],
+    ...advanced.slice(index * 3, index * 3 + 3),
+  ])
+})
+
+export const cos412QuestionBank = mixedQuestions.map((question, index) => ({
+  ...question,
+  id: index + 1,
+}))
 
 export const cos412Topics = sections.map(({ topic }) => ({
   topic,
